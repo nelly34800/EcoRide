@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+    font-family: var(--font-family-serif);
+    color: var(--dark);
+    text-align: center;
+}
+
+@media screen and (max-width: 680px) {
+    body {
+        font-size: 14px;
+    }
+}
+@media screen and (min-width: 681px) {
+    body {
+        font-size: 24px;
+    }
+} 
+
+.cont-nav {
+    background-color: var(--dark);
+}
+
+.nav-link {
+    color: var(--primary);
+    font-family: var(--font-family-sans-serif);
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    color: var(--secondary);
+}
+
+.hero-scene {
+    filter: brightness(0.3);
+    }
+
+.text-center {
+    color: var(--dark);
+}
+
+.inv {
+    background-color: var(--dark);
+}
+
+.text-center-inv {
+    color: var(--primary);
+}
+
+.container-fluid {
+    background-color: var(--dark);
+}
+
+.navbar-toggler {
+    color: var(--primary);
+}
+.bg-primary {
+    color: var(--primary);
+}
+
+.color {
+    color: var(--primary);
+}
