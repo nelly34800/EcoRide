@@ -1,3 +1,9 @@
+<?php
+require_once "Lib/config.php";
+
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -22,13 +28,13 @@
                     <span class="navbar-toggler-icon" style="background-color: var(--primary);"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="col-md-2 justify-content-center">
-                        <h2>Accueil</h2>
-                    </div>
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li><a href="#" class="nav-link px-2">Accueil</a></li>
-                        <li><a href="#" class="nav-link px-2">Covoiturage</a></li>
-                        <li><a href="#" class="nav-link px-2">Contact</a></li>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 nav nav-pills">
+                        <?php foreach ($mainMenu as $key => $value) { ?>
+                            <!--affiche la classe active de l'onglet quand on est sur la page-->
+                            <li class="nav-item"><a href="<?= $key; ?>" class="nav-link <?php if ($currentPage === $key) {
+                                                                                            echo 'active';
+                                                                                        } ?>"><?= $value; ?></a></li>
+                        <?php } ?>
                     </ul>
                     <div class="col-md-2 justify-content-center">
                         <button type="button" class="btn btn-outline-primary">S'inscrire</button>

@@ -3,6 +3,7 @@
     font-family: var(--font-family-serif);
     color: var(--dark);
     text-align: center;
+    align-items: center;
 }
 
 @media screen and (max-width: 680px) {
@@ -61,4 +62,17 @@
 
 .color {
     color: var(--primary);
+}
+
+h4.card-title {
+    color: var(--dark);
+}
+
+.filtres{
+    background-color:  var(--primary);
+    color: var(--black);
+}
+
+.back{
+    background-color: var(--secondary);
 }
