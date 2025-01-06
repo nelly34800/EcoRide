@@ -37,8 +37,8 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
                         <?php } ?>
                     </ul>
                     <div class="col-md-2 justify-content-center">
-                        <button type="button" class="btn btn-outline-primary">S'inscrire</button>
-                        <button type="button" class="btn btn-primary">Se connecter</button>
+                        <a class="btn btn-outline-primary" href="signin.php">Connexion</a>
+                        <a class="btn btn-primary" href="signup.php">Inscription</a>
                     </div>
                 </div>
         </nav>

@@ -68,11 +68,18 @@ h4.card-title {
     color: var(--dark);
 }
 
-.filtres{
-    background-color:  var(--primary);
-    color: var(--black);
+.filtres {
+    background-color:  var(--secondary);
+    color: var(--dark);
 }
 
-.back{
-    background-color: var(--secondary);
+.card-body-dark {
+    background-color: var(--dark);
+}
+
+.card-text-light {
+    color: var(--primary);
+}
+.input-group-text {
+    color: var(--dark);
 }

@@ -7,8 +7,8 @@
                 voyage éco: <img src="/assets/img/<?= $journey['voyage_eco'] ?>"><br>
                 place dispo: <?= $journey['place_dispo'] ?> <br>
                 tarif: <?= $journey['tarif'] ?> <br></p>
-
-            <a href="#" class="btn btn-primary stretched-link">Détails</a>
+            <!--on passe la clé en paramètre pour qu'elle passe par l'id-->
+            <a href="trajet.php?id=<?= $key ?> class=" btn btn-primary stretched-link w-100">Détails</a>
         </div>
     </div>
 </div>

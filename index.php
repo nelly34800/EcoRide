@@ -2,7 +2,7 @@
 require_once "templates/header.php";
 ?>
 <div class="hero-scene">
-    <img src="assets/img/banAccueil.png" alt="" width="100%">
+    <img src="assets/img/BanAccueil.png" alt="" width="100%">
 </div>
 <p>Vous êtes soucieux de l’environnement et cherchez une solution économique pour voyager.</p>
 <h1> Vous êtes au bon endroit!</h1>
