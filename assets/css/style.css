@@ -83,3 +83,6 @@ h4.card-title {
 .input-group-text {
     color: var(--dark);
 }
+.small {
+    font-size: 16px;
+}

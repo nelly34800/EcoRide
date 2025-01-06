@@ -3,20 +3,25 @@ require_once "templates/header.php";
 ?>
 
 <div class="hero-scene">
-    <img src="assets/img/BanAuto.jpg" alt="" width="100%">
+    <img src="assets/img/BanFumee.jpg" alt="" width="100%">
 </div>
 
 <div class="form-signin w-100 m-auto">
-    <h1>Contactez-nous!</h1>
+    <h1>Signaler un problème !</h1>
 
     <form action="" method="post">
 
-        <a class="btn btn-primary" href="problème_covoiturage.php">Signaler un problème pendant un covoiturage</a>
+        <div class="mb-3">
+            <label class="form-label" for="carpool-number">numéro du covoiturage : </label>
+            <input type="text" name="carpool number" class="form-control" id="carpool number">
+        </div>
 
         <div class="mb-3">
             <label class="form-label" for="title">titre du message : </label>
             <input type="text" name="title" class="form-control" id="title">
         </div>
+
+
 
         <div class="mb-3">
             <label class="form-label" for="description">Description : </label>
