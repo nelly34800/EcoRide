@@ -86,3 +86,11 @@ h4.card-title {
 .small {
     font-size: 16px;
 }
+.bar {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    background-color: var(--secondary);
+    color: var(--dark);
+    border-radius: 2rem;
+    border:0;
+}

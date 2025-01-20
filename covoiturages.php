@@ -1,16 +1,22 @@
 <?php
 require_once "templates/header.php";
+require_once "Lib/pdo.php";
 require_once "lib/journey.php";
+require_once "lib/view_carpooling.php";
 
-$journeys = getJourneys();
+//Récupérer les valeurs des paramètres d'URL
+$place_departure = isset($_GET['place_departure']) ? $_GET['place_departure'] : '';
+$place_arrival = isset($_GET['place_arrival']) ? $_GET['place_arrival'] : '';
+$date = isset($_GET['date']) ? $_GET['date'] : '';
+
+// Recherche des covoiturages correspondants
+$journeys = getJourneys($pdo, $place_departure, $place_arrival, $date);
 ?>
 
 <div class="hero-scene">
     <img src="assets/img/BanCovoiturage.jpg" alt="" width="100%">
 </div>
 
-<h1>Pour votre voyage du: "date" "départ" "arrivé" "x" trajets trouvés</h1>
-<!-- fair l bloc filtre-->
 <div class="row">
     <div class="col-md-3">
         <form action="" method="get">
@@ -42,15 +48,21 @@ $journeys = getJourneys();
             </div>
     </div>
     </form>
+
     <div class="col-md-9">
         <div class="row">
-            <?php foreach ($journeys as $key => $journey) {
-                require 'templates/journey_part.php';
-            } ?>
+            <?php
+            showJourneys($journeys);
+            // Puis, si aucun résultat exact n'est trouvé, tu recherches d'autres trajets et les affiches
+            if (count($journeys) == 0) {
+                $journey_other_dates = getJourneysOtherDates($pdo, $place_departure, $place_arrival, $date);
+                showJourneysOtherDates($journey_other_dates); // Si tu veux les afficher aussi
+            }
+            ?>
         </div>
     </div>
+</div>
 </div>
 
 <?php
 require_once "templates/footer.php";
-?>

@@ -1,5 +1,7 @@
 <?php
-require_once "Lib/config.php";
+session_start();
+require_once "lib/config.php";
+
 
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
 ?>
@@ -36,9 +38,15 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
                                                                                         } ?>"><?= $value; ?></a></li>
                         <?php } ?>
                     </ul>
-                    <div class="col-md-2 justify-content-center">
-                        <a class="btn btn-outline-primary" href="signin.php">Connexion</a>
-                        <a class="btn btn-primary" href="signup.php">Inscription</a>
+
+                    <div class="col-md-2">
+                        <?php if (isset($_SESSION["user"])): ?>
+                            <a class="btn btn-outline-primary" href="profil.php">Bonjour <?= $_SESSION["user"]["pseudo"] ?> </a>
+                            <a class="btn btn-primary" href="signout.php">Déconnexion</a>
+                        <?php else: ?>
+                            <a class="btn btn-outline-primary" href="signin.php">Connexion</a>
+                            <a class="btn btn-primary" href="signup.php">Inscription</a>
+                        <?php endif; ?>
                     </div>
                 </div>
         </nav>

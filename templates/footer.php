@@ -4,7 +4,7 @@
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
 
         <ul class="nav col-md-4 justify-content-center">
-            <li class="nav-item"><a href="#" class="nav-link px-2 ">ecoride@mail.fr</a></li>
+            <li class="nav-item"><a href="contact.php" class="nav-link px-2 ">ecoride@mail.fr</a></li>
         </ul>
 
         <a href="index.php" class="d-inline-flex link-body-emphasis text-decoration-none">

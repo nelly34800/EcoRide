@@ -4,12 +4,32 @@ require_once "templates/header.php";
 <div class="hero-scene">
     <img src="assets/img/BanAccueil.png" alt="" width="100%">
 </div>
+
 <p>Vous êtes soucieux de l’environnement et cherchez une solution économique pour voyager.</p>
 <h1> Vous êtes au bon endroit!</h1>
 
-<!--faire la barre de recherche-->
+<div class="container p-4">
+    <form class="bar row g-3" action="covoiturages.php" method="GET">
+        <div class="col-auto">
+            <label for="place_departure">départ: </label>
+            <input class="bar" type="text" name="place_departure" id="place_departure" placeholder="...">
+        </div>
 
+        <div class="col-auto">
+            <label for="place_arrival">arrivée: </label>
+            <input class="bar" type="text" name="place_arrival" id="place_arrival" placeholder="...">
+        </div>
 
+        <div class="col-auto">
+            <label for="date">date: </label>
+            <input class="bar" type="date" id="date" name="date ">
+        </div>
+
+        <div class="col-auto">
+            <input type="submit" class="btn btn-dark mb-3" value="rechercher" name="getJourneys">
+        </div>
+    </form>
+</div>
 <section>
     <article>
         <div class="container p-4">
@@ -36,7 +56,7 @@ require_once "templates/header.php";
                     </div>
                     <div class="col">
                         <p class="text-center-inv">
-                            Covoiturez en plus d’être plus respectueux de l’environnement. Vous fait aussi économiser sur vos trajet. Il pourra peut être vous permettre de vous faire de nouveaux amis.
+                            Covoiturez en plus d’être plus respectueux de l’environnement, vous fait aussi économiser sur vos trajets. Cela pourrait également vous permettre de vous faire de nouveaux amis.
                         </p>
                     </div>
                 </div>

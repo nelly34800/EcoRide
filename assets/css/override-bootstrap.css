@@ -59,6 +59,15 @@
     font-weight: bold;
 }
 
+.btn-dark {
+        --bs-btn-color: var(--primary);
+        --bs-btn-bg: var(--dark);
+        --bs-btn-border-color: (--primary);
+        --bs-btn-hover-color: var(--dark);
+        font-family: var(--font-family-sans-serif);
+        font-weight: bold;
+}
+
 .nav-pills {
     --bs-nav-pills-border-radius: 0.375rem;
     --bs-nav-pills-link-active-color: var(--dark);
