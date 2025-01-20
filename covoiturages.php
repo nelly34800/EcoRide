@@ -1,18 +1,18 @@
 <?php
 require_once "templates/header.php";
 require_once "Lib/pdo.php";
-require_once "lib/journey.php";
+require_once "lib/journey.php"; // Import de journey.php pour utiliser la fonction getJourneys
 require_once "lib/view_carpooling.php";
 
-//Récupérer les valeurs des paramètres d'URL
+// Récupérer les données envoyées depuis le formulaire de `index.php`
 $place_departure = isset($_GET['place_departure']) ? $_GET['place_departure'] : '';
 $place_arrival = isset($_GET['place_arrival']) ? $_GET['place_arrival'] : '';
 $date = isset($_GET['date']) ? $_GET['date'] : '';
 
-// Recherche des covoiturages correspondants
+// Appel à la fonction pour obtenir les covoiturages
 $journeys = getJourneys($pdo, $place_departure, $place_arrival, $date);
-?>
 
+?>
 <div class="hero-scene">
     <img src="assets/img/BanCovoiturage.jpg" alt="" width="100%">
 </div>

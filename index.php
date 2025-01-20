@@ -1,6 +1,27 @@
 <?php
 require_once "templates/header.php";
+require_once "Lib/pdo.php";
+require_once "lib/journey.php";
+
+$errors = [];
+$journeys = [];
+if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
+    // Récupérer les données envoyées par le formulaire
+    $verif = verifyJourneys($_GET);
+    if ($verif === true) {
+        $journeys = [
+            "place_departure" => $_GET['place_departure'] ?? '',
+            "place_arrival" => $_GET['place_arrival'] ?? '',
+            "date" => $_GET['date'] ?? '',
+        ];
+        header("Location: covoiturages.php?place_departure=" . urlencode($journeys['place_departure']) . "&place_arrival=" . urlencode($journeys['place_arrival']) . "&date=" . urlencode($journeys['date']));
+        exit();
+    } else {
+        $errors = $verif;
+    }
+}
 ?>
+
 <div class="hero-scene">
     <img src="assets/img/BanAccueil.png" alt="" width="100%">
 </div>
@@ -9,27 +30,42 @@ require_once "templates/header.php";
 <h1> Vous êtes au bon endroit!</h1>
 
 <div class="container p-4">
-    <form class="bar row g-3" action="covoiturages.php" method="GET">
+    <form class="bar row g-3" action="index.php" method="GET">
         <div class="col-auto">
             <label for="place_departure">départ: </label>
-            <input class="bar" type="text" name="place_departure" id="place_departure" placeholder="...">
+            <input class="bar" type="text" name="place_departure" id="place_departure" value="<?php echo htmlspecialchars($_GET['place_departure'] ?? ''); ?>" placeholder="...">
+            <?php if (isset($errors["place_departure"])) { ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= $errors["place_departure"] ?>
+                </div>
+            <?php } ?>
         </div>
 
         <div class="col-auto">
             <label for="place_arrival">arrivée: </label>
-            <input class="bar" type="text" name="place_arrival" id="place_arrival" placeholder="...">
+            <input class="bar" type="text" name="place_arrival" id="place_arrival" value="<?php echo htmlspecialchars($_GET['place_arrival'] ?? ''); ?>" placeholder="...">
+            <?php if (isset($errors["place_arrival"])) { ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= $errors["place_arrival"] ?>
+                </div>
+            <?php } ?>
         </div>
 
         <div class="col-auto">
             <label for="date">date: </label>
-            <input class="bar" type="date" id="date" name="date ">
+            <input class="bar" type="date" id="date" name="date" value="<?php echo htmlspecialchars($_GET['date'] ?? ''); ?>">
+            <?php if (isset($errors["date"])) { ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= $errors["date"] ?>
+                </div>
+            <?php } ?>
         </div>
-
         <div class="col-auto">
             <input type="submit" class="btn btn-dark mb-3" value="rechercher" name="getJourneys">
         </div>
     </form>
 </div>
+
 <section>
     <article>
         <div class="container p-4">
@@ -64,8 +100,10 @@ require_once "templates/header.php";
         </div>
     </article>
 </section>
+
 <h4>Réservez en toute confiance:</h4>
 <p>Nous vérifions les avis et les profils de nos chauffeurs pour que vous sachiez avec qui vous allez voyager.</p>
+
 <?php
 require_once "templates/footer.php";
 ?>

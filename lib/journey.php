@@ -1,4 +1,31 @@
 <?php
+function verifyJourneys($journeys)
+{
+    $errors = [];
+
+    // Vérification du champ "place_departure"
+    if (!isset($journeys["place_departure"]) || empty($journeys["place_departure"])) {
+        $errors["place_departure"] = "Le champ départ est obligatoire";
+    }
+
+    // Vérification du champ "place_arrival"
+    if (!isset($journeys["place_arrival"]) || empty($journeys["place_arrival"])) {
+        $errors["place_arrival"] = "Le champ arrivée est obligatoire";
+    }
+
+    // Vérification du champ "date"
+    if (!isset($journeys["date"]) || empty($journeys["date"])) {
+        $errors["date"] = "Le champ date est obligatoire";
+    }
+
+    // Si des erreurs existent, on les retourne
+    if (count($errors) > 0) {
+        return $errors;
+    }
+
+    // Si aucune erreur, on retourne true
+    return true;
+}
 
 function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date): array
 {
@@ -12,7 +39,7 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date): array
            AND place_arrival = :place_arrival";
     // si la date n'est pas vide on ajoute date à la requête
     if (!empty($date)) {
-        $sql .= "AND date = :date";
+        $sql .= " AND date = :date";
     }
     // Préparer la requête PDO
     $query = $pdo->prepare($sql);
@@ -28,6 +55,7 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date): array
     $query->execute();
     return  $query->fetchAll(PDO::FETCH_ASSOC);
 }
+
 function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date): array
 {
     // Si aucune date trouvée, recherche des dates différentes
@@ -68,26 +96,4 @@ function getJourneysById(PDO $pdo, int $id): array|bool
     $query->bindValue(":id", $id, PDO::PARAM_INT);
     $query->execute();
     return $query->fetch(PDO::FETCH_ASSOC);
-}
-function verifyJourneys($journeys): array
-{
-    $errors = [];
-    if (isset($journeys["place_departure"])) {
-        if ($journeys["place_departure"] === "") {
-            $errors["place_departure"] = "Le champ départ est obligatoire";
-        }
-    }
-    if (isset($journeys["place_arrival"])) {
-        if ($journeys["place_arrival"] === "") {
-            $errors["place_arrival"] = "Le champ arrivée est obligatoire";
-        }
-    }
-    if (isset($journeys["date"])) {
-        if ($journeys["date"] === "") {
-            $errors["date"] = "Le champ date est obligatoire";
-        }
-    }
-    if (count($errors)) {
-        return $errors;
-    }
 }

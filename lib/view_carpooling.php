@@ -15,7 +15,7 @@ function showJourneys($journeys)
             require "templates/journey_part.php"; // Affichage du covoiturage
         }
     } else {
-        echo "<h1>Aucun covoiturage trouvé.</h1>";
+        echo "<h1>Aucun covoiturage trouvé</h1>";
     }
 }
 
@@ -23,7 +23,7 @@ function showJourneys($journeys)
 function showJourneysOtherDates($journeys)
 {
     if (count($journeys) > 0) {
-        echo "<h1>Aucun covoiturage trouvé pour cette date, mais voici d'autres trajets :</h1>";
+        echo "<h1>pour cette date, mais voici d'autres trajets :</h1>";
 
         foreach ($journeys as $journey) {
             require "templates/journey_part.php"; // Affichage du covoiturage
