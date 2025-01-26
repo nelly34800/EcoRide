@@ -20,22 +20,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
-
 <div class="hero-scene">
     <img src="assets/img/BanTrajet.jpg" alt="" width="100%">
 </div>
 
 <div class="form-signin w-100 m-auto">
-    <h1>Connexion</h1>
+    <div class="my-4">
+        <h1>Connexion</h1>
+    </div>
 
     <form method="POST">
-
-        <div class="form-floating">
+        <div class="my-4">
             <label for="email">Email: </label>
             <input type="email" name="email" class="form-control" id="email">
         </div>
-
-        <div class="form-floating">
+        <div class="my-4">
             <label for="password">Mot de passe : </label>
             <input type="password" name="password" class="form-control" id="password">
         </div>
@@ -44,13 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <?= $error ?>
             </div>
         <?php endif; ?>
-        <input class="btn btn-primary w-100 py-2" type="submit" value="Se connecter">
+        <div class="my-4">
+            <input class="btn btn-primary w-100 py-2" type="submit" value="Se connecter">
+        </div>
     </form>
 </div>
-
-
 <?php
 
 require_once "templates/footer.php";
-
 ?>

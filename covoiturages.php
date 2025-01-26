@@ -17,33 +17,33 @@ $journeys = getJourneys($pdo, $place_departure, $place_arrival, $date);
     <img src="assets/img/BanCovoiturage.jpg" alt="" width="100%">
 </div>
 
-<div class="row">
-    <div class="col-md-3">
+<div class="row m-0">
+    <div class="col-md-3 mt-3 p-3">
         <form action="" method="get">
             <h2 class="filtres">Filtres</h2>
 
-            <div class="p-3 border-bottom">
+            <div class="border-bottom">
                 <label for="price">Prix maximum : </label>
                 <div class="input-group">
                     <input type="number" min="1" name="price" id="price" class="form-control" placeholder="tarif">
                     <span class="input-group-text">Crédits</span>
                 </div>
             </div>
-            <div class="p-3 border-bottom">
+            <div class="border-bottom">
                 <label for="drive-note">Note minimum chauffeur : </label>
                 <div class="input-group">
                     <input type="number" min="1" max="5" name="drive-note" id="drive-note" class="form-control" placeholder="note">
                     <span class="input-group-text"><i class="bi bi-star"></i></span>
                 </div>
             </div>
-            <div class="p-3 border-bottom">
+            <div class="border-bottom">
                 <label for="max_duration">Durée maximale du trajet : </label>
                 <div class="input-group">
                     <input type="number" min="1" max="20" name="max_duration" id="max_duration" class="form-control" placeholder="durée">
                     <span class="input-group-text">Heures</span>
                 </div>
             </div>
-            <div class="mt-3">
+            <div class="mt-4 mb-3">
                 <button type="submit" class="btn btn-primary w-100">Filtrer</button>
             </div>
     </div>

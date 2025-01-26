@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
     <form class="bar row g-3" action="index.php" method="GET">
         <div class="col-auto">
             <label for="place_departure">départ: </label>
-            <input class="bar" type="text" name="place_departure" id="place_departure" value="<?php echo htmlspecialchars($_GET['place_departure'] ?? ''); ?>" placeholder="...">
+            <input class="bar-content" type="text" name="place_departure" id="place_departure" value="<?= htmlspecialchars($_GET['place_departure'] ?? ''); ?>" placeholder="...">
             <?php if (isset($errors["place_departure"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["place_departure"] ?>
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
 
         <div class="col-auto">
             <label for="place_arrival">arrivée: </label>
-            <input class="bar" type="text" name="place_arrival" id="place_arrival" value="<?php echo htmlspecialchars($_GET['place_arrival'] ?? ''); ?>" placeholder="...">
+            <input class="bar-content" type="text" name="place_arrival" id="place_arrival" value="<?= htmlspecialchars($_GET['place_arrival'] ?? ''); ?>" placeholder="...">
             <?php if (isset($errors["place_arrival"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["place_arrival"] ?>
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
 
         <div class="col-auto">
             <label for="date">date: </label>
-            <input class="bar" type="date" id="date" name="date" value="<?php echo htmlspecialchars($_GET['date'] ?? ''); ?>">
+            <input class="bar-content" type="date" id="date" name="date" value="<?= htmlspecialchars($_GET['date'] ?? ''); ?>">
             <?php if (isset($errors["date"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["date"] ?>

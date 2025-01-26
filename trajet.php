@@ -2,6 +2,7 @@
 require_once "templates/header.php";
 require_once "Lib/pdo.php";
 require_once "lib/journey.php";
+require_once "lib/utils.php";
 
 $error404 = false;
 
@@ -19,19 +20,34 @@ if (isset($_GET["id"])) {
     <img src="assets/img/BanTrajet.jpg" alt="banniére décorative" width="100%">
 </div>
 
-<div class="col md-4 my-2 d-flex">
+<div class="col md-4 my-4 d-flex">
     <?php if (isset($journey) && $journey): ?>
         <div class="card w-100">
-            <img src="/uploads_images/<?= $journey['image'] ?>" class="bd-placeholder-img rounded-circle" width="100" height="100" alt="<?= $journey['pseudo'] ?>">
-            <div class="card-body-dark">
-                <h4 class="card-text-light"><?= $journey['pseudo'] ?></h4>
+            <img src="<?= htmlspecialchars(getAvatar($journey['image'])); ?>" class="bd-placeholder-img rounded-circle" width="100" height="100" alt="photo du chauffeur">
+            <div class="card-body-dark p-4">
+                <h3><?= htmlspecialchars($journey['pseudo']); ?></h3>
                 <p class="card-text-light">
-                    départ: <?= $journey['departure_time'] ?> - arrivée: <?= $journey['arrival_time'] ?> <br>
-                    voyage éco: <img src="/assets/img/<?= $journey['electric_car'] ?>"><br>
-                    place dispo: <?= $journey['number_places'] ?> <br>
-                    tarif: <?= $journey['price'] ?> <br></p>
+                    <?= htmlspecialchars(changeDateFormatJour($journey['date'])); ?> <br>
+                    heure départ: <?= htmlspecialchars(changeHourFormat($journey['departure_time'])); ?> <br>
+                    heure arrivée prévue: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?> <br>
+                    durée prévue du trajet: <?= htmlspecialchars(journeyTime($journey['departure_time'], $journey['arrival_time'])); ?> <br></p>
+                <p class="card-text-light">
+                    place dispo: <?= htmlspecialchars($journey['number_places']); ?> <br></p>
+                <p class="card-text-light">
+                    voyage éco: <?php convertEnergy($journey['energy']); ?> <br>
+                    marque: <?= htmlspecialchars($journey['brand']); ?> <br>
+                    modèle: <?= htmlspecialchars($journey['model']); ?> <br>
+                    couleur: <?= htmlspecialchars($journey['color']); ?> <br>
+                    énérgie: <?= htmlspecialchars($journey['energy']); ?> <br>
 
-                <a href="trajet.php" class="btn btn-primary stretched-link ">Participer au trajet</a>
+                </p>
+                <p class="card-text-light"> préférences: <br>
+                    animal: <?php choice($journey['pets']); ?>
+                    tabac: <?php choice($journey['smoking']); ?><br>
+                    autre: <?= htmlspecialchars($journey['others']); ?> </p>
+                <p class="card-text-light p-1">
+                    tarif: <?= htmlspecialchars($journey['price']); ?> crédits<br></p>
+                <a href="trajet.php" class="btn btn-primary">Participer au trajet</a>
             </div>
         </div>
     <?php else: ?>

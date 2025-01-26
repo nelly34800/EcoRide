@@ -5,6 +5,12 @@
     text-align: center;
     align-items: center;
 }
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
 
 @media screen and (max-width: 680px) {
     body {
@@ -15,12 +21,19 @@
     body {
         font-size: 24px;
     }
-} 
+    .bar {
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        height: 45px;
+    }
 
+    .bar-content {
+        height: 25px;
+    }
+}
 .cont-nav {
     background-color: var(--dark);
 }
-
 .nav-link {
     color: var(--primary);
     font-family: var(--font-family-sans-serif);
@@ -28,55 +41,50 @@
     margin-left: 10px;
     margin-right: 10px;
 }
-
 .nav-link:hover {
     color: var(--secondary);
 }
-
+.nav-link.active {
+    border-radius: 2rem;
+}
+.nav-link.active:hover {
+    background-color: var(--secondary);
+}
 .hero-scene {
     filter: brightness(0.3);
     }
-
 .text-center {
     color: var(--dark);
 }
-
 .inv {
     background-color: var(--dark);
 }
-
 .text-center-inv {
     color: var(--primary);
 }
-
 .container-fluid {
     background-color: var(--dark);
 }
-
 .navbar-toggler {
     color: var(--primary);
 }
 .bg-primary {
     color: var(--primary);
 }
-
 .color {
     color: var(--primary);
 }
-
-h4.card-title {
+.card-title {
     color: var(--dark);
 }
-
 .filtres {
     background-color:  var(--secondary);
     color: var(--dark);
+    border-radius: 2rem;
 }
-
 .card-body-dark {
     background-color: var(--dark);
 }
-
 .card-text-light {
     color: var(--primary);
 }
@@ -87,8 +95,11 @@ h4.card-title {
     font-size: 16px;
 }
 .bar {
-    justify-content: space-between;
-    flex-wrap: nowrap;
+    background-color: var(--secondary);
+    color: var(--dark);
+    border-radius: 2rem;
+}
+.bar-content {
     background-color: var(--secondary);
     color: var(--dark);
     border-radius: 2rem;

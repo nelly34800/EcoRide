@@ -2,7 +2,6 @@
 session_start();
 require_once "lib/config.php";
 
-
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
 ?>
 
@@ -39,7 +38,7 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
                         <?php } ?>
                     </ul>
 
-                    <div class="col-md-2">
+                    <div class="md-3">
                         <?php if (isset($_SESSION["user"])): ?>
                             <a class="btn btn-outline-primary" href="profil.php">Bonjour <?= $_SESSION["user"]["pseudo"] ?> </a>
                             <a class="btn btn-primary" href="signout.php">Déconnexion</a>

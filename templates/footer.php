@@ -1,7 +1,7 @@
 </main>
 </div>
 <div class="cont-nav">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center border-top">
 
         <ul class="nav col-md-4 justify-content-center">
             <li class="nav-item"><a href="contact.php" class="nav-link px-2 ">ecoride@mail.fr</a></li>

@@ -3,27 +3,79 @@
 require_once "templates/header.php";
 require_once "lib/pdo.php";
 require_once "lib/user.php";
-
+require_once "lib/role.php";
+require_once "lib/utils.php";
 $errors = [];
+$messages = [];
+$user = [
+    'pseudo' => '',
+    'email' => '',
+    'password' => '',
+    'last_name' => '',
+    'first_name' => '',
+    'address' => '',
+];
+
+$roles = getRoles($pdo);
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $verif = verifyUser($_POST);
     if ($verif === true) {
-        $resAdd = addUser($pdo,  $_POST["pseudo"], $_POST["email"], $_POST["password"], $_POST["last_name"], $_POST["first_name"], $_POST["address"], $_POST["role"], null);
-        header("Location: signgin.php");
+        // Vérification et gestion de l'image
+        $fileName = null;
+        //si un fichier à été envoyé
+        if (isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'] != '') {
+            //la méthode getimagesize va retourner false si le fichier n'est pas une image
+            $checkImage = getimagesize($_FILES['file']['tmp_name']);
+            if ($checkImage !== false) {
+                // Si l'image est valide, renommer et déplacer
+                $fileName = uniqid() . '-' . basename($_FILES['file']['name']);
+                move_uploaded_file($_FILES['file']['tmp_name'], _AVATAR_IMG_PATH_ . $fileName);  // Assure-toi que ce dossier existe
+            } else {
+                //sinon on affiche un message d'erreur
+                $errors[] = 'Le fichier doit être une image';
+            }
+        }
+
+        // Si il n'y a pas d'erreur, on enregistre l'utilisateur
+        if (empty($errors)) {
+            $resAdd = addUser($pdo, $_POST["pseudo"], $_POST["email"], $_POST["password"], $_POST["last_name"], $_POST["first_name"], $_POST["address"], $_POST["role"], $fileName);
+            header("Location: signin.php");
+        }
     } else {
         $errors = $verif;
     }
 }
-
+$user = [
+    'pseudo' => $_POST['pseudo'] ?? '',
+    'email' => $_POST['email'] ?? '',
+    'password' => $_POST['password'] ?? '',
+    'last_name' => $_POST['last_name'] ?? '',
+    'first_name' => $_POST['first_name'] ?? '',
+    'address' => $_POST['address'] ?? '',
+];
 ?>
 
 <div class="form-signin w-100 m-auto">
     <h1>Inscription</h1>
 
-    <form action="" method="POST">
-        <div class="mb-2">
+    <?php foreach ($messages as $message) { ?>
+        <div class="alert alert-success">
+            <?= $message; ?>
+        </div>
+    <?php } ?>
+    <!-- ou pas-->
+    <?php foreach ($errors as $error) { ?>
+        <div class="alert alert-danger">
+            <?= $error; ?>
+        </div>
+    <?php } ?>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        <!--multipart/form-data autorise gestion des fichiers-->
+        <div class="form-floating">
             <label class="form-label" for="pseudo">Pseudo: </label>
-            <input class="form-control" type="text" name="pseudo" id="pseudo">
+            <input class="form-control" type="text" name="pseudo" id="pseudo" value="<?= htmlspecialchars($user['pseudo']); ?>">
             <?php if (isset($errors["pseudo"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["pseudo"] ?>
@@ -31,9 +83,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php } ?>
         </div>
 
-        <div class="mb2">
+        <div class="form-floating">
             <label class="form-label" for="email">Email: </label>
-            <input type="email" name="email" class="form-control" id="email">
+            <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($user['email']); ?>">
             <?php if (isset($errors["email"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["email"] ?>
@@ -41,19 +93,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php } ?>
         </div>
 
-        <div class="mb-2">
+        <div class="form-floating">
             <label class="form-label" for="password">Mot de passe : </label>
-            <p class="small">le mot de passe doit contenir 8 caractères avec majuscule, minuscule, chiffre et caractère spécial </p>
-            <input type="password" name="password" class="form-control" id="password">
+            <input type="password" name="password" class="form-control" id="password" value="<?= htmlspecialchars($user['password']); ?>">
             <?php if (isset($errors["password"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["password"] ?>
                 </div>
             <?php } ?>
         </div>
+        <p class="small">le mot de passe doit contenir 8 caractères avec majuscule, minuscule, chiffre et caractère spécial </p>
         <div class="form-floating">
             <label class="form-label" for="last_name">Nom: </label>
-            <input class="form-control" type="text" name="last_name" id="last_name">
+            <input class="form-control" type="text" name="last_name" id="last_name" value="<?= htmlspecialchars($user['last_name']); ?>">
             <?php if (isset($errors["last_name"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["last_name"] ?>
@@ -62,16 +114,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
         <div class="form-floating">
             <label class="form-label" for="first_name">Prénom: </label>
-            <input class="form-control" type="text" name="first_name" id="first_name">
+            <input class="form-control" type="text" name="first_name" id="first_name" value="<?= htmlspecialchars($user['first_name']); ?>">
             <?php if (isset($errors["first_name"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["first_name"] ?>
                 </div>
             <?php } ?>
         </div>
-        <div class="form-floating">
+        <div class="mb-2">
             <label class="form-label" for="address">Adresse: </label>
-            <input class="form-control" type="text" name="address" id="address">
+            <input class="form-control" type="text" name="address" id="address" value="<?= htmlspecialchars($user['address']); ?>">
             <?php if (isset($errors["address"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["address"] ?>
@@ -81,9 +133,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="form-floating">
             <label for="role" class="form-label">Rôle: </label>
             <select name="role" id="role" class="form-select">
-                <option value="3">passager</option>
-                <option value="2">chauffeur</option>
-                <option value="6">passager et chauffeur</option>
+                <?php foreach ($roles as $role) { ?>
+                    <option value="<?= $role['id']; ?>"><?= $role['role']; ?></option>
+                <?php } ?>
             </select>
         </div>
         <div class="mb-2">
