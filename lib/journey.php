@@ -1,4 +1,5 @@
 <?php
+require_once "lib/utils.php";
 function verifyJourneys($journeys)
 {
     $errors = [];
@@ -27,49 +28,92 @@ function verifyJourneys($journeys)
     return true;
 }
 
-function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date): array
+function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $filters = []): array
 {
-    //  rechercher les itinéraires avec les informations du chauffeur et de la voiture qui correspondent à la date
-    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date,
-    cars.number_places, cars.energy, users.pseudo, users.image
-     FROM journeys
+    $conditions = ["place_departure = :place_departure", "place_arrival = :place_arrival", "date = :date"];
+    $params = [
+        ':place_departure' => $place_departure,
+        ':place_arrival' => $place_arrival,
+        ':date' => $date
+    ];
+
+    // Filtre pour le prix maximum
+    if (!empty($filters['max_price'])) {
+        $conditions[] = "price <= :max_price";
+        $params[':max_price'] = $filters['max_price'];
+    }
+
+    // Filtre pour l'énergie écologique
+    if (!empty($filters['energy']) && $filters['energy'] === "eco") {
+        $conditions[] = "cars.energy IN ('éléctrique', 'hybride')";
+    }
+
+    // Filtre pour la durée maximale
+    if (!empty($filters['max_duration'])) {
+        $conditions[] = "TIMESTAMPDIFF(HOUR, journeys.departure_time, journeys.arrival_time) <= :max_duration";
+        $params[':max_duration'] = $filters['max_duration'];
+    }
+
+    $where = implode(" AND ", $conditions);
+    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date, cars.number_places, cars.energy, users.pseudo, users.image
+            FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
-             WHERE place_departure = :place_departure
-           AND place_arrival = :place_arrival
-           AND date = :date";
+            WHERE $where";
 
-    // Préparer la requête PDO (faille injection SQL)
     $query = $pdo->prepare($sql);
 
-    // Lier les paramètres 
-    $query->bindParam(':place_departure', $place_departure);
-    $query->bindParam(':place_arrival', $place_arrival);
-    $query->bindParam(':date', $date);
-    // Exécuter la requête
+    foreach ($params as $key => $value) {
+        $query->bindValue($key, $value);
+    }
+
     $query->execute();
-    return  $query->fetchAll(PDO::FETCH_ASSOC);
+
+    // Récupérer tous les trajets
+    return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date): array
+
+function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date, array $filters = []): array
 {
+    $conditions = ["place_departure = :place_departure", "place_arrival = :place_arrival", "date != :date"];
+    $params = [
+        ':place_departure' => $place_departure,
+        ':place_arrival' => $place_arrival,
+        ':date' => $date
+    ];
+    // Filtre pour le prix maximum
+    if (!empty($filters['max_price'])) {
+        $conditions[] = "price <= :max_price";
+        $params[':max_price'] = $filters['max_price'];
+    }
+
+    // Filtre pour l'énergie écologique
+    if (!empty($filters['energy']) && $filters['energy'] === "eco") {
+        $conditions[] = "cars.energy IN ('éléctrique', 'hybride')";
+    }
+
+    // Filtre pour la durée maximale
+    if (!empty($filters['max_duration'])) {
+        $conditions[] = "TIMESTAMPDIFF(HOUR, journeys.departure_time, journeys.arrival_time) < :max_duration";
+        $params[':max_duration'] = $filters['max_duration'];
+    }
+    $where = implode(" AND ", $conditions);
     // Si aucune date trouvée, recherche des dates différentes
     $sql_other = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date,
             cars.number_places, cars.energy, users.pseudo, users.image
              FROM journeys
                     JOIN users ON user_id = users.id
                     JOIN cars ON car_id = cars.id
-                     WHERE place_departure = :place_departure
-                   AND place_arrival = :place_arrival
-                   AND date != :date";
+                     WHERE $where";
 
     // Préparer la requête pour l'itinéraire avec une date différente
     $query_date_other = $pdo->prepare($sql_other);
 
     // Lier les paramètres
-    $query_date_other->bindParam(':place_departure', $place_departure);
-    $query_date_other->bindParam(':place_arrival', $place_arrival);
-    $query_date_other->bindParam(':date', $date);
+    foreach ($params as $key => $value) {
+        $query_date_other->bindValue($key, $value);
+    }
 
     // Exécuter la requête
     $query_date_other->execute();
