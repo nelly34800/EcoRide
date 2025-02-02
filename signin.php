@@ -1,8 +1,8 @@
 <?php
 require_once "lib/pdo.php";
 require_once "lib/user.php";
+require_once "lib/role.php";
 require_once "templates/header.php";
-
 
 $error = null;
 
@@ -12,9 +12,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         session_regenerate_id(true);
         $_SESSION["user"] = [
             "id" => $user["id"],
-            "pseudo" => $user["pseudo"]
+            "pseudo" => $user["pseudo"],
+            "role_id" => $user["role_id"]
         ];
-        header("Location: index.php");
+        // redirige l'admins sur son espace
+        if ($_SESSION["user"]["role_id"] == 5) {
+            header("Location: admin.php");
+            // redirige l'employé sur son espace
+        } elseif ($_SESSION["user"]["role_id"] == 4) {
+            header("Location: employe.php");
+            // redirige le chauffeur sur son espace
+        } elseif ($_SESSION["user"]["role_id"] == 2) {
+            header("Location: chauffeur.php");
+        } elseif ($_SESSION["user"]["role_id"] == 3 || $_SESSION["user"]["role_id"] == 6) {
+            if (isset($_SESSION['redirect_to'])) {
+                $redirect_to = $_SESSION['redirect_to'];
+                unset($_SESSION['redirect_to']);
+                header("Location: $redirect_to");
+            } else {
+                header("Location: index.php");
+            }
+        }
+        exit;
     } else {
         $error = "Email ou mot de passe incorrect";
     }
@@ -49,6 +68,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </form>
 </div>
 <?php
-
 require_once "templates/footer.php";
 ?>

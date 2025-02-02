@@ -56,7 +56,7 @@ $journeys = getJourneys($pdo, $place_departure, $place_arrival, $date, $filters)
                 <div class="border-bottom">
                     <label for="max_duration">durée maximale du trajet: </label>
                     <div class="input-group">
-                        <input type="number" name="max_duration" id="max_duration" class="form-control" placeholder="durée" value="<?php if (isset($_GET["max_duration"])) ?>">
+                        <input type="number" min="1" max="24" name="max_duration" id="max_duration" class="form-control" placeholder="durée" value="<?php if (isset($_GET["max_duration"])) ?>">
                         <span class="input-group-text">Heures</span>
                     </div>
                 </div>

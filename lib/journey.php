@@ -1,5 +1,6 @@
 <?php
-require_once "lib/utils.php";
+require_once "utils.php";
+require_once "reservation.php";
 function verifyJourneys($journeys)
 {
     $errors = [];
@@ -30,11 +31,16 @@ function verifyJourneys($journeys)
 
 function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $filters = []): array
 {
-    $conditions = ["place_departure = :place_departure", "place_arrival = :place_arrival", "date = :date"];
+    $conditions = [
+        "place_departure = :place_departure",
+        "place_arrival = :place_arrival",
+        "date = :date",
+        "(cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) > 0"
+    ];
     $params = [
-        ':place_departure' => $place_departure,
-        ':place_arrival' => $place_arrival,
-        ':date' => $date
+        ":place_departure" => $place_departure,
+        ":place_arrival" => $place_arrival,
+        ":date" => $date
     ];
 
     // Filtre pour le prix maximum
@@ -47,18 +53,26 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $f
     if (!empty($filters['energy']) && $filters['energy'] === "eco") {
         $conditions[] = "cars.energy IN ('éléctrique', 'hybride')";
     }
-
     // Filtre pour la durée maximale
     if (!empty($filters['max_duration'])) {
-        $conditions[] = "TIMESTAMPDIFF(HOUR, journeys.departure_time, journeys.arrival_time) <= :max_duration";
-        $params[':max_duration'] = $filters['max_duration'];
+        $max_duration_minutes = $filters['max_duration'] * 60;
+        $conditions[] = "TIMESTAMPDIFF(MINUTE, journeys.departure_time, journeys.arrival_time) <= :max_duration";
+        $params[':max_duration'] = $max_duration_minutes;
     }
 
     $where = implode(" AND ", $conditions);
-    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date, cars.number_places, cars.energy, users.pseudo, users.image
+    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date, 
+    cars.number_places, cars.energy, users.pseudo, users.image,
+     (cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
             FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
+            LEFT JOIN (
+                SELECT journey_id, COUNT(*) AS reserved_count
+                FROM reservations
+                WHERE status = 'upcoming'
+                GROUP BY journey_id
+            ) AS reservation_counts ON journeys.id = reservation_counts.journey_id
             WHERE $where";
 
     $query = $pdo->prepare($sql);
@@ -76,12 +90,18 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $f
 
 function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date, array $filters = []): array
 {
-    $conditions = ["place_departure = :place_departure", "place_arrival = :place_arrival", "date != :date"];
-    $params = [
-        ':place_departure' => $place_departure,
-        ':place_arrival' => $place_arrival,
-        ':date' => $date
+    $conditions = [
+        "place_departure = :place_departure",
+        "place_arrival = :place_arrival",
+        "date != :date",
+        "(cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) > 0"
     ];
+    $params = [
+        ":place_departure" => $place_departure,
+        ":place_arrival" => $place_arrival,
+        ":date" => $date
+    ];
+
     // Filtre pour le prix maximum
     if (!empty($filters['max_price'])) {
         $conditions[] = "price <= :max_price";
@@ -92,19 +112,29 @@ function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date
     if (!empty($filters['energy']) && $filters['energy'] === "eco") {
         $conditions[] = "cars.energy IN ('éléctrique', 'hybride')";
     }
-
     // Filtre pour la durée maximale
     if (!empty($filters['max_duration'])) {
-        $conditions[] = "TIMESTAMPDIFF(HOUR, journeys.departure_time, journeys.arrival_time) < :max_duration";
-        $params[':max_duration'] = $filters['max_duration'];
+        $max_duration_minutes = $filters['max_duration'] * 60;
+        $conditions[] = "TIMESTAMPDIFF(MINUTE, journeys.departure_time, journeys.arrival_time) <= :max_duration";
+        $params[':max_duration'] = $max_duration_minutes;
     }
+    // Ajoutez la condition pour les places restantes
+    $conditions[] = "(cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) > 0";
+
     $where = implode(" AND ", $conditions);
     // Si aucune date trouvée, recherche des dates différentes
     $sql_other = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date,
-            cars.number_places, cars.energy, users.pseudo, users.image
+            cars.number_places, cars.energy, users.pseudo, users.image,
+            (cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
              FROM journeys
                     JOIN users ON user_id = users.id
                     JOIN cars ON car_id = cars.id
+                     LEFT JOIN (
+                      SELECT journey_id, COUNT(*) AS reserved_count
+                      FROM reservations
+                      WHERE status = 'upcoming'
+                      GROUP BY journey_id
+                  ) AS reservation_counts ON journeys.id = reservation_counts.journey_id
                      WHERE $where";
 
     // Préparer la requête pour l'itinéraire avec une date différente

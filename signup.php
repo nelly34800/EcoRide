@@ -76,66 +76,39 @@ $user = [
         <div class="form-floating">
             <label class="form-label" for="pseudo">Pseudo: </label>
             <input class="form-control" type="text" name="pseudo" id="pseudo" value="<?= htmlspecialchars($user['pseudo']); ?>">
-            <?php if (isset($errors["pseudo"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["pseudo"] ?>
-                </div>
-            <?php } ?>
         </div>
 
         <div class="form-floating">
             <label class="form-label" for="email">Email: </label>
             <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($user['email']); ?>">
-            <?php if (isset($errors["email"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["email"] ?>
-                </div>
-            <?php } ?>
         </div>
 
         <div class="form-floating">
             <label class="form-label" for="password">Mot de passe : </label>
             <input type="password" name="password" class="form-control" id="password" value="<?= htmlspecialchars($user['password']); ?>">
-            <?php if (isset($errors["password"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["password"] ?>
-                </div>
-            <?php } ?>
         </div>
         <p class="small">le mot de passe doit contenir 8 caractères avec majuscule, minuscule, chiffre et caractère spécial </p>
         <div class="form-floating">
             <label class="form-label" for="last_name">Nom: </label>
             <input class="form-control" type="text" name="last_name" id="last_name" value="<?= htmlspecialchars($user['last_name']); ?>">
-            <?php if (isset($errors["last_name"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["last_name"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="form-floating">
             <label class="form-label" for="first_name">Prénom: </label>
             <input class="form-control" type="text" name="first_name" id="first_name" value="<?= htmlspecialchars($user['first_name']); ?>">
-            <?php if (isset($errors["first_name"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["first_name"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="mb-2">
             <label class="form-label" for="address">Adresse: </label>
             <input class="form-control" type="text" name="address" id="address" value="<?= htmlspecialchars($user['address']); ?>">
-            <?php if (isset($errors["address"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["address"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="form-floating">
             <label for="role" class="form-label">Rôle: </label>
             <select name="role" id="role" class="form-select">
-                <?php foreach ($roles as $role) { ?>
-                    <option value="<?= $role['id']; ?>"><?= $role['role']; ?></option>
-                <?php } ?>
+                <?php foreach ($roles as $role) {
+                    // Exclure les rôles "admin" (id = 5) et "employé" (id = 4)
+                    if ($role['id'] != 5 && $role['id'] != 4) { ?>
+                        <option value="<?= $role['id']; ?>"> <?= $role['role']; ?></option>
+                <?php }
+                } ?>
             </select>
         </div>
         <div class="mb-2">
@@ -145,7 +118,6 @@ $user = [
         <input type="submit" class="btn btn-primary w-100 py-2 " value="S'inscrire" name="add_user">
     </form>
 </div>
-
 
 <?php
 

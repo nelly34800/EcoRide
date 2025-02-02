@@ -8,3 +8,12 @@ function getRoles(PDO $pdo)
     $query->execute();
     return $query->fetchAll();
 }
+
+function verifRole(int $required_role_id)
+{
+    // si l'utilisateur essaye d'accèder à une page non autorisée il est redirigé vers la page not_allowed.php
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role_id'] !== $required_role_id) {
+        header("Location: not_allowed.php");
+        exit;
+    }
+}

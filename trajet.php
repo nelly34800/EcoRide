@@ -47,7 +47,7 @@ if (isset($_GET["id"])) {
                     autre: <?= htmlspecialchars($journey['others']); ?> </p>
                 <p class="card-text-light p-1">
                     tarif: <?= htmlspecialchars($journey['price']); ?> crédits<br></p>
-                <a href="trajet.php" class="btn btn-primary">Participer au trajet</a>
+                <a href="f.php" class="btn btn-primary">Participer au trajet</a>
             </div>
         </div>
     <?php else: ?>

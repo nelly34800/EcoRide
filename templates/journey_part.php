@@ -1,7 +1,5 @@
 <?php
 require_once "lib/utils.php";
-
-
 ?>
 
 <div class="col-md-6 my-4 d-flex">

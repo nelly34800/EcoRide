@@ -1,5 +1,4 @@
 <?php
-
 require_once "templates/header.php";
 require_once "lib/journey.php";
 require_once "lib/pdo.php";
@@ -46,59 +45,28 @@ $journey = [
         <div class="form-floating">
             <label class="form-label" for="place_departure">lieu de départ: </label>
             <input type="texte" name="place_departure" class="form-control" id="place_departure" value="<?= htmlspecialchars($journey['place_departure']); ?>">
-            <?php if (isset($errors["place_departure"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["place_departure"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="form-floating">
             <label class="form-label" for="place_arrival">lieu d'arrivée: </label>
             <input type="texte" name="place_arrival" class="form-control" id="place_arrival" value="<?= htmlspecialchars($journey['place_arrival']); ?>">
-            <?php if (isset($errors["place_arrival"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["place_arrival"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="form-floating">
             <label class="form-label" for="date">date: </label>
             <input type="date" name="date" class="form-control" id="date" value="<?= htmlspecialchars($journey['date']); ?>">
-            <?php if (isset($errors["date"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["date"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="mb-1">
             <label class="form-label" for="departure_time">heure de départ: </label>
             <input type="time" name="departure_time" class="form-control" id="departure_time" value="<?= htmlspecialchars($journey['departure_time']); ?>">
-            <?php if (isset($errors["departure_time"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["departure_time"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="mb-1">
             <label class="form-label" for="arrival_time">heure d'arrivée prévue: </label>
             <input type="time" name="arrival_time" class="form-control" id="arrival_time" value="<?= htmlspecialchars($journey['arrival_time']); ?>">
-            <?php if (isset($errors["arrival_time"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["arrival_time"] ?>
-                </div>
-            <?php } ?>
         </div>
         <div class="mb-1">
             <label class="form-label" for="price">tarif: </label>
             <div class="input-group">
                 <input type="number" min="1" name="price" id="price" class="form-control" value="<?= htmlspecialchars($journey['price']); ?>">
-                <?php if (isset($errors["price"])) { ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?= $errors["price"] ?>
-                    </div>
-                <?php } ?>
                 <span class="input-group-text">Crédits par passager: </span>
-
             </div>
         </div>
         <p class="small">(frais de gestion de la plateforme inclus: 2€ <br>
@@ -110,9 +78,6 @@ $journey = [
     </form>
 </div>
 
-
 <?php
-
 require_once "templates/footer.php";
-
 ?>

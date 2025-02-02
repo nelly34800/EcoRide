@@ -8,11 +8,11 @@
         </ul>
 
         <a href="index.php" class="d-inline-flex link-body-emphasis text-decoration-none">
-            <img src="assets/img/logo_e.png" alt="Logo EcoRide" width="52px">
+            <img src="assets/img/logo_e.png" alt="Logo EcoRide cercle avec à l'intérieur une voiture à coté d'un smartphone" width="52px">
         </a>
 
         <ul class="nav col-md-4 justify-content-center">
-            <li class="nav-item"><a href="#" class="nav-link px-2">Mentions légales</a></li>
+            <li class="nav-item"><a href="mentions_legales.php" class="nav-link px-2">Mentions légales</a></li>
         </ul>
 
     </footer>

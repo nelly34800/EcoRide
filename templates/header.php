@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once "lib/config.php";
 
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
@@ -23,7 +25,7 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
         <nav class="navbar navbar-expand-lg bg-body-tertiary ">
             <div class="container-fluid">
                 <a class="navbar-brand" href="index.php">
-                    <img src="assets/img/logo_e.png" alt="Logo EcoRide" width="52px">
+                    <img src="assets/img/logo_e.png" alt="Logo EcoRide  cercle avec à l'intérieur une voiture à coté d'un smartphone" width="52px">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon" style="background-color: var(--primary);"></span>
@@ -36,18 +38,38 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
                                                                                             echo 'active';
                                                                                         } ?>"><?= $value; ?></a></li>
                         <?php } ?>
-                    </ul>
 
-                    <div class="md-3">
                         <?php if (isset($_SESSION["user"])): ?>
-                            <a class="btn btn-outline-primary" href="profil.php">Bonjour <?= $_SESSION["user"]["pseudo"] ?> </a>
-                            <a class="btn btn-primary" href="signout.php">Déconnexion</a>
+                            <?php
+                            //détermine le chemin de la page en fonction du rôle de l'utilisateur
+                            $profil = 'index.php'; //valeur par défaut
+                            switch ($_SESSION['user']['role_id']) {
+                                case 5: //admin
+                                    $profil = 'admin.php';
+                                    break;
+                                case 4: //employé
+                                    $profil = 'employe.php';
+                                    break;
+                                case 2: //chauffeur
+                                    $profil = 'chauffeur.php';
+                                    break;
+                                case 3: //passager
+                                    $profil = 'passager.php';
+                                    break;
+                                case 6: //passager_chauffeur
+                                    $profil = 'passager_chauffeur.php';
+                                    break;
+                            }
+                            ?>
+                            <li class="nav-item"><a class="btn btn-outline-primary" href="<?= htmlspecialchars($profil) ?>">Bonjour <?= htmlspecialchars($_SESSION["user"]["pseudo"]) ?> </a></li>
+                            <li class="nav-item"><a class="btn btn-primary" href="signout.php">Déconnexion</a></li>
                         <?php else: ?>
-                            <a class="btn btn-outline-primary" href="signin.php">Connexion</a>
-                            <a class="btn btn-primary" href="signup.php">Inscription</a>
+                            <li class="nav-item"><a class="btn btn-outline-primary" href="signin.php">Connexion</a></li>
+                            <li class="nav-item"><a class="btn btn-primary" href="signup.php">Inscription</a></li>
                         <?php endif; ?>
-                    </div>
+                    </ul>
                 </div>
+            </div>
         </nav>
     </header>
     <main>
