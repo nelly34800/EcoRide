@@ -22,7 +22,7 @@ require_once "templates/header.php";
             <label class="form-label" for="description">Description : </label>
             <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
         </div>
-        <input type="submit" class="btn btn-primary" type="submit" value="envoyer">
+        <input type="submit" class="btn btn-primary" value="envoyer">
     </form>
 </div>
 

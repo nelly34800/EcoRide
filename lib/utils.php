@@ -75,7 +75,7 @@ function changeDateFormatJour($date)
     return $jourSemaine . ' ' . $jourMois . ' ' . $moisNom . ' ' . $annee;
 }
 
-function changeHourFormat($hour) // Affiche date  "jour-mois-année"
+function changeHourFormat($hour) // Affiche date  "10h00"
 {
     return date("H\hi", strtotime($hour));
 }

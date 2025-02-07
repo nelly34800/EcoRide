@@ -4,7 +4,7 @@ require_once "lib/user.php";
 require_once "lib/role.php";
 require_once "templates/header.php";
 
-// Vérifier que l'utilisateur est administrateur
+// Vérifier que l'utilisateur est passager et chauffeur
 verifRole(6);
 
 ?>

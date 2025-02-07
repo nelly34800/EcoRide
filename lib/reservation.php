@@ -1,14 +1,16 @@
 <?php
 function verifAndUpdateJourneyStatus($pdo, $journey_id)
 {
-    // Récupérer le nombre de places disponibles pour le trajet
+    // Récupérer le nombre de places disponibles pour le trajet et le met à jour
     $sql = "SELECT number_places FROM cars 
             JOIN journeys ON cars.id = journeys.car_id 
             WHERE journeys.id = :journey_id";
     $query = $pdo->prepare($sql);
     $query->bindValue(':journey_id', $journey_id, PDO::PARAM_INT);
     $query->execute();
-    $number_places = $query->fetchColumn();
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    $car_id = $result['car_id'];
+    $number_places = $result['number_places'];
 
     // Récupérer le nombre de réservations pour le trajet
     $sql = "SELECT COUNT(*) FROM reservations WHERE journey_id = :journey_id";
@@ -17,9 +19,17 @@ function verifAndUpdateJourneyStatus($pdo, $journey_id)
     $query->execute();
     $reservation_count = $query->fetchColumn();
 
-    // Mettre à jour le statut du trajet si complet
-    if ($reservation_count >= $number_places) {
-        $sql = "UPDATE reservations SET status = 'complet' WHERE journey_id = :journey_id";
+    // Mettre à jour le nombre de places disponibles
+    $remaining_places = $number_places - $reservation_count;
+    $sql = "UPDATE cars SET number_places = :remaining_places WHERE id = :car_id";
+    $query = $pdo->prepare($sql);
+    $query->bindValue(':remaining_places', $remaining_places, PDO::PARAM_INT);
+    $query->bindValue(':car_id', $car_id, PDO::PARAM_INT);
+    $query->execute();
+
+    // Mettre à jour le statut (dans journeys) du trajet si complet
+    if ($remaining_places <= 0) {
+        $sql = "UPDATE journeys SET status = 'complet' WHERE id = :journey_id";
         $query = $pdo->prepare($sql);
         $query->bindValue(':journey_id', $journey_id, PDO::PARAM_INT);
         $query->execute();

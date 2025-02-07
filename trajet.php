@@ -16,9 +16,6 @@ if (isset($_GET["id"])) {
     $error404 = true;
 }
 ?>
-<div class="hero-scene">
-    <img src="assets/img/BanTrajet.jpg" alt="banniére décorative" width="100%">
-</div>
 
 <div class="col md-4 my-4 d-flex">
     <?php if (isset($journey) && $journey): ?>
@@ -47,7 +44,8 @@ if (isset($_GET["id"])) {
                     autre: <?= htmlspecialchars($journey['others']); ?> </p>
                 <p class="card-text-light p-1">
                     tarif: <?= htmlspecialchars($journey['price']); ?> crédits<br></p>
-                <a href="f.php" class="btn btn-primary">Participer au trajet</a>
+                <!-- ne pas oublier de passer l'id du trajet dans la confirmation -->
+                <a href="Confirme_reservation.php?action=confirmer&id=<?= $id ?>" class="btn btn-primary">Participer au trajet</a>
             </div>
         </div>
     <?php else: ?>

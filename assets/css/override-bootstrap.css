@@ -24,7 +24,7 @@
     .btn-primary {
     --bs-btn-color: var(--dark);
     --bs-btn-bg: var(--primary);
-    --bs-btn-border-color: (--secondary);
+    --bs-btn-border-color: var(--primary);
     --bs-btn-hover-color: var(--dark);
     --bs-btn-hover-bg: var(--secondary);
     --bs-btn-hover-border-color: var(--secondary);
@@ -63,8 +63,10 @@
 .btn-dark {
         --bs-btn-color: var(--primary);
         --bs-btn-bg: var(--dark);
-        --bs-btn-border-color: (--primary);
+        --bs-btn-border-color: var(--dark);
         --bs-btn-hover-color: var(--dark);
+        --bs-btn-hover-bg: var(--secondary);
+        --bs-btn-hover-border-color: var(--secondary);
         font-family: var(--font-family-sans-serif);
         font-weight: bold;
 }

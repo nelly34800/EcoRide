@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $verif = verifyCreatJourney($_POST);
     if ($verif === true) {
         $res = registerJourney($pdo, $_POST["place_departure"], $_POST["place_arrival"], $_POST["date"], $_POST["departure_time"], $_POST["arrival_time"], $_POST["price"]);
-        header("Location: profil.php");
+        header("Location: chauffeur.php");
     } else {
         $errors = $verif;
     }

@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $verif = verifyCar($_POST);
     if ($verif === true) {
         $res = registerCar($pdo, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["number_places"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"]);
-        header("Location: profil.php");
+        header("Location: chauffeur.php");
     } else {
         $errors = $verif;
     }
