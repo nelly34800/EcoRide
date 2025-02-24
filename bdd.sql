@@ -1,0 +1,2 @@
+CREATE DATABASE ecoride;
+CREATE TABLE users () 

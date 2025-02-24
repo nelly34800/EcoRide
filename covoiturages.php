@@ -34,9 +34,9 @@ $journeys = getJourneys($pdo, $place_departure, $place_arrival, $date, $filters)
                 <h2 class="filters mt-3 mb-3">Filtres</h2>
 
                 <!-- Inclure les valeurs de départ, arrivée et date -->
-                <input type="hidden" name="place_departure" value="<?php echo $place_departure; ?>">
-                <input type="hidden" name="place_arrival" value="<?php echo $place_arrival; ?>">
-                <input type="hidden" name="date" value="<?php echo $date; ?>">
+                <input type="hidden" name="place_departure" value="<?= $place_departure; ?>">
+                <input type="hidden" name="place_arrival" value="<?= $place_arrival; ?>">
+                <input type="hidden" name="date" value="<?= $date; ?>">
 
                 <div class="border-bottom">
                     <label for="energy">voyage écologique: </label>

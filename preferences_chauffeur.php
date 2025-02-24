@@ -1,77 +1,43 @@
 <?php
 require_once "templates/header.php";
+require_once "Lib/pdo.php";
+require_once "Lib/utils.php";
 require_once "lib/preference.php";
-require_once "lib/pdo.php";
 
-$errors = [];
-$preferences = [
-    'pets' => '',
-    'smoking' => '',
-    'others' => '',
-];
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $verif = verifyPreferences($_POST);
-    if ($verif === true) {
-        $res = registerPreferences($pdo, $_POST["pets"], $_POST["smoking"], $_POST["others"]);
-        header("Location: chauffeur.php");
-    } else {
-        $errors = $verif;
-    }
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user']['id'])) {
+    header("Location: signin.php"); // Redirige vers la page de connexion si non connecté
+    exit();
 }
 
-$preferences = [
-    'pets' => $_POST['pets'] ?? '',
-    'smoking' => $_POST['smoking'] ?? '',
-    'others' => $_POST['others'] ?? '',
-];
-?>
+$user_id = $_SESSION['user']['id']; // Récupère l'ID de l'utilisateur connecté
 
-<div class="form-signin w-100 m-auto">
-    <h1>Entrer vos préférences:</h1>
+// Récupérer l'ID des préférences
+$preferences_id = getUserPreferencesId($pdo, $user_id);
+$preferences = $preferences_id ? getPreferences($pdo, $preferences_id) : null;
 
-    <form action="" method="POST">
+if (isset($_GET['success'])): ?>
+    <div class="alert alert-success">Vos préférences ont été supprimées avec succès !</div>
+<?php elseif (isset($_GET['error'])): ?>
+    <div class="alert alert-danger">Erreur lors de la suppression de vos préférences.</div>
+<?php endif; ?>
+<div class="container">
+    <h1>Mes préférences</h1>
+    <a class="btn btn-primary m-2" href="ajout_preferences_chauffeur.php">Ajouter mes préférences</a>
 
-        <fieldset class="mb-2">
-            <legend>J'accepte les animaux: </legend>
-            <input type="radio" id="pets_yes" name="pets" value="1" />
-            <label for="pets_yes">oui</label>
-            <input type="radio" id="pets_no" name="pets" value="0" />
-            <label for="pets_no">non</label><br>
-            <?php if (isset($errors["pets"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["pets"] ?>
-                </div>
-            <?php } ?>
-        </fieldset>
-        <fieldset class="mb-2">
-            <legend>J'accepte de faire des pauses pour les fumeurs: </legend>
-            <input type="radio" id="smoking_yes" name="smoking" value="1" />
-            <label for="smoking_yes">oui</label>
-            <input type="radio" id="smoking_no" name="smoking" value="0" />
-            <label for="smoking_no">non</label><br>
-            <?php if (isset($errors["smoking"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["smoking"] ?>
-                </div>
-            <?php } ?>
-        </fieldset>
-
-        <div class="mb-2">
-            <label class="form-label" for="others">Autres préférences: </label>
-            <textarea name="others" id="others" cols="30" rows="5" class="form-control"><?= htmlspecialchars($preferences['others']); ?></textarea>
-            <?php if (isset($errors["others"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["others"] ?>
-                </div>
-            <?php } ?>
+    <?php if ($preferences): ?>
+        <p class="card-text">J'accepte les animaux: <?php choice($preferences['pets']); ?></p>
+        <p class="card-text">J'accepte de faire des pauses pour les fumeurs: <?php choice($preferences['smoking']); ?></p>
+        <p class="card-text">autres préférences: <?= htmlspecialchars($preferences['others']); ?></p>
+        <div class="m-2">
+            <a href="ajout_preferences_chauffeur.php?id=<?= $preferences['id']; ?>" class="btn btn-primary m-2">Modifier vos préférences</a>
+            <a href="sup_preferences_chauffeur.php?id=<?= $preferences['id']; ?>" class="btn btn-dark m-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer vos préférences ?');">Supprimer vos préférences</a>
         </div>
-        <input type="submit" class="btn btn-primary" name="RegisterPreferences" value="enregistrer les préférences">
-    </form>
+    <?php else: ?>
+        <p>Aucune préférences enregistrée.</p>
+    <?php endif; ?>
 </div>
 
 <?php
-
 require_once "templates/footer.php";
-
 ?>

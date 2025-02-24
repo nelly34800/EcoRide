@@ -1,8 +1,7 @@
 <?php
-function registerCar(PDO $pdo, string $brand, string $model, string $color, int $number_places, string $energy, string $registration, string $date_first_registration)
+function registerCar(PDO $pdo, string $brand, string $model, string $color, int $number_places, string $energy, string $registration, string $date_first_registration, int $user_id): bool
 {
-
-    $sql = "INSERT INTO cars (id, brand, model, color, number_places, energy, registration, date_first_registration) VALUES (NULL, :brand, :model, :color, :number_places, :energy, :registration, :date_first_registration)";
+    $sql = "INSERT INTO cars (id, brand, model, color, number_places, energy, registration, date_first_registration, id_user) VALUES (NULL, :brand, :model, :color, :number_places, :energy, :registration, :date_first_registration, :id_user)";
 
     $query = $pdo->prepare($sql);
     $query->bindParam(':brand', $brand);
@@ -12,6 +11,7 @@ function registerCar(PDO $pdo, string $brand, string $model, string $color, int 
     $query->bindParam(':energy', $energy);
     $query->bindParam(':registration', $registration);
     $query->bindParam(':date_first_registration', $date_first_registration);
+    $query->bindParam(':id_user', $user_id, PDO::PARAM_INT);
     return $query->execute();
 }
 
@@ -79,4 +79,48 @@ function verifyCar($car): array|bool
     } else {
         return true;
     }
+}
+
+function getCars(PDO $pdo, int $user_id): array
+{
+    $sql = "SELECT id, brand, model, color, number_places, energy, registration, date_first_registration, id_user FROM cars WHERE id_user = :user_id";
+    $query = $pdo->prepare($sql);
+    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+    return $car ?: null;
+}
+
+function getCarById(PDO $pdo, int $car_id)
+{
+    $sql = "SELECT id, brand, model, color, number_places, energy, registration, date_first_registration, id_user FROM cars WHERE id = :car_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':car_id', $car_id, PDO::PARAM_INT);
+    $query->execute();
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
+
+function updateCar(PDO $pdo, int $car_id, string $brand, string $model, string $color, int $number_places, string $energy, string $registration, string $date_first_registration)
+{
+    $sql = "UPDATE cars SET brand = :brand, model = :model, color = :color, number_places = :number_places, energy = :energy, registration = :registration, date_first_registration = :date_first_registration WHERE id = :car_id";
+
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':brand', $brand);
+    $query->bindParam(':model', $model);
+    $query->bindParam(':color', $color);
+    $query->bindParam(':number_places', $number_places, PDO::PARAM_INT);
+    $query->bindParam(':energy', $energy);
+    $query->bindParam(':registration', $registration);
+    $query->bindParam(':date_first_registration', $date_first_registration);
+    $query->bindParam(':car_id', $car_id, PDO::PARAM_INT);
+
+    return $query->execute();
+}
+function deleteCar(PDO $pdo, int $car_id, int $user_id): bool
+{
+    $sql = "DELETE FROM cars WHERE id = :car_id AND id_user = :user_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':car_id', $car_id, PDO::PARAM_INT);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    return $query->execute();
 }

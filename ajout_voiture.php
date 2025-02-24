@@ -3,37 +3,52 @@ require_once "templates/header.php";
 require_once "lib/car.php";
 require_once "lib/pdo.php";
 
+if (!isset($_SESSION['user']['id'])) {
+    die("Erreur : Utilisateur non connecté.");
+}
+
+$user_id = $_SESSION['user']['id'];
+
 $errors = [];
 $car = [
     'brand' => '',
     'model' => '',
     'color' => '',
+    'number_places' => '',
+    'energy' => '',
     'registration' => '',
     'date_first_registration' => '',
 ];
 
+$car_id = $_GET['id'] ?? null; // Vérifie si un ID est passé en paramètre
+
+if ($car_id) {
+    // Si un ID est présent, on récupère les infos de la voiture
+    $car = getCarById($pdo, $car_id);
+    if (!$car) {
+        die("Voiture introuvable !");
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $verif = verifyCar($_POST);
     if ($verif === true) {
-        $res = registerCar($pdo, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["number_places"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"]);
-        header("Location: chauffeur.php");
+        if ($car_id) {
+            // Si il y'en a une on modifie la voiture
+            updateCar($pdo, $car_id, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["number_places"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"]);
+        } else { //si on ajoute une voiture
+            registerCar($pdo, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["number_places"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"], $user_id);
+        }
+        header("Location: voitures.php");
+        exit();
     } else {
         $errors = $verif;
     }
 }
-
-$car = [
-    'brand' => $_POST['brand'] ?? '',
-    'model' => $_POST['model'] ?? '',
-    'color' => $_POST['color'] ?? '',
-    'registration' => $_POST['registration'] ?? '',
-    'date_first_registration' => $_POST['date_first_registration'] ?? '',
-];
-
 ?>
 
 <div class="form-signin w-100 m-auto">
-    <h1>Ajouter une voiture</h1>
+    <h1>Ajouter ou modifier une voiture</h1>
 
     <form action="" method="POST">
 
@@ -66,7 +81,7 @@ $car = [
         </div>
         <div class="mb-2">
             <label for="number_places">Nombre de places disponibles: </label>
-            <input type="number" min="1" max="8" name="number_places" class="form-control" id="number_places">
+            <input type="number" min="1" max="8" name="number_places" class="form-control" id="number_places" value="<?= htmlspecialchars($car['number_places']); ?>">
             <?php if (isset($errors["number_places"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["number_places"] ?>
@@ -107,8 +122,7 @@ $car = [
                 </div>
             <?php } ?>
         </div>
-        <input type="submit" class="btn btn-primary" name="registerCar" value="ajouter une voiture">
-
+        <input type="submit" class="btn btn-primary" name="registerCar" value="<?= $car_id ? 'Modifier la voiture' : 'Ajouter une voiture'; ?>">
     </form>
 </div>
 

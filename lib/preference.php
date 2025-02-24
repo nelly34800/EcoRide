@@ -37,3 +37,48 @@ function verifyPreferences($preferences): array|bool
         return true;
     }
 }
+function getPreferences(PDO $pdo, int $preferences_id)
+{
+    $sql = "SELECT driver_preferences.id, pets, smoking, others FROM driver_preferences JOIN users ON users.preferences_id = driver_preferences.id WHERE driver_preferences.id = :preferences_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':preferences_id', $preferences_id, PDO::PARAM_INT);
+    $query->execute();
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
+function getUserPreferencesId(PDO $pdo, int $user_id)
+{
+    $sql = "SELECT preferences_id FROM users WHERE id = :user_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+
+    return $result['preferences_id'] ?? null; // Retourne null si pas de préférence
+}
+
+function updatePreference(PDO $pdo, $preferences_id, $pets, $smoking, $others)
+{
+    $sql = "UPDATE driver_preferences JOIN users ON users.preferences_id = driver_preferences.id SET pets = :pets, smoking = :smoking, others = :others WHERE driver_preferences.id = :preferences_id";
+
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':pets', $pets);
+    $query->bindParam(':smoking', $smoking);
+    $query->bindParam(':others', $others);
+    $query->bindParam(':preferences_id', $preferences_id, PDO::PARAM_INT);
+
+    return $query->execute();
+}
+function deletePreference(PDO $pdo, int $preferences_id, int $user_id): bool
+{
+    $sql = "DELETE driver_preferences 
+            FROM driver_preferences 
+            JOIN users ON users.preferences_id = driver_preferences.id 
+            WHERE driver_preferences.id = :preferences_id 
+            AND users.id = :user_id";
+
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':preferences_id', $preferences_id, PDO::PARAM_INT);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+    return $query->execute();
+}
