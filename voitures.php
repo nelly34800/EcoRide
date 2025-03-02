@@ -11,7 +11,7 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 $user_id = $_SESSION['user']['id']; // Récupère l'ID de l'utilisateur connecté
-$cars = getCars($pdo, $user_id);
+$cars = getCars($pdo, $user_id); // Récupérer l'ID de la voiture
 
 if (isset($_GET['success'])): ?>
     <div class="alert alert-success">La voiture a été supprimée avec succès !</div>

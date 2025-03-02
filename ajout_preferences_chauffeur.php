@@ -3,6 +3,12 @@ require_once "templates/header.php";
 require_once "lib/preference.php";
 require_once "lib/pdo.php";
 
+if (!isset($_SESSION['user']['id'])) {
+    die("Erreur : Utilisateur non connecté.");
+}
+
+$user_id = $_SESSION['user']['id'];
+
 $errors = [];
 $preferences = [
     'pets' => '',
@@ -10,21 +16,31 @@ $preferences = [
     'others' => '',
 ];
 
+$preferences_id = $_GET['id'] ?? null; // Vérifie si un ID est passé en paramètre
+
+if ($preferences_id) {
+    // Si un ID est présent, on récupère les infos 
+    $preferences = getpreferencesId($pdo, $preferences_id);
+    if (!$preferences) {
+        die("Préférences introuvables !");
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $verif = verifyPreferences($_POST);
     if ($verif === true) {
-        $res = registerPreferences($pdo, $_POST["pets"], $_POST["smoking"], $_POST["others"]);
-        header("Location: chauffeur.php");
+        if ($preferences_id) {
+            // Si il y'en a on modifie les préférences
+            updatePreferences($pdo, $preferences_id, $_POST["pets"], $_POST["smoking"], $_POST["others"]);
+        } else {
+            registerPreferences($pdo, $_POST["pets"], $_POST["smoking"], $_POST["others"], $user_id);
+        }
+        header("Location: preferences_chauffeur.php");
+        exit();
     } else {
         $errors = $verif;
     }
 }
-
-$preferences = [
-    'pets' => $_POST['pets'] ?? '',
-    'smoking' => $_POST['smoking'] ?? '',
-    'others' => $_POST['others'] ?? '',
-];
 ?>
 
 <div class="form-signin w-100 m-auto">
@@ -66,7 +82,7 @@ $preferences = [
                 </div>
             <?php } ?>
         </div>
-        <input type="submit" class="btn btn-primary" name="RegisterPreferences" value="enregistrer les préférences">
+        <input type="submit" class="btn btn-primary" name="RegisterPreferences" value="<?= $preferences_id ? 'modifier les préférences' : 'enregistrer les préférences'; ?>">
     </form>
 </div>
 

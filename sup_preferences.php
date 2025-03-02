@@ -13,14 +13,15 @@ $user_id = $_SESSION['user']['id'];
 $preferences_id = $_GET['id'] ?? null; // Récupérer l'ID des préférences à supprimer
 
 if ($preferences_id) {
-    $deleted = deletePreference($pdo, $preferences_id, $user_id);
+    $deleted = deletePreferences($pdo, $preferences_id, $user_id);
     if ($deleted) {
         header("location: preferences_chauffeur.php?success"); // Redirection avec succès
     } else {
         header("location: preferences_chauffeur.php?error"); // Redirection en cas d'erreur
+        exit();
     }
-
-    header("location: preferences_chauffeur.php?error"); // Si l'id est manquant
+} else {
+    header("Location: preferences_chauffeur.php?error"); // Si l'ID est manquant
     exit();
 }
 

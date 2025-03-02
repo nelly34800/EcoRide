@@ -168,10 +168,10 @@ function getJourneysById(PDO $pdo, int $id): array|bool
     return $query->fetch(PDO::FETCH_ASSOC);
 }
 
-function registerJourney(PDO $pdo, string $place_departure, string $place_arrival, string $date, string $departure_time, string $arrival_time, int $price)
+function registerJourney(PDO $pdo, string $place_departure, string $place_arrival, string $date, string $departure_time, string $arrival_time, int $price,  int $user_id, int $car_id)
 {
 
-    $sql = "INSERT INTO journeys (id, place_departure, place_arrival, date, departure_time, arrival_time, price) VALUES (NULL, :place_departure, :place_arrival, :date, :departure_time, :arrival_time, :price)";
+    $sql = "INSERT INTO journeys (id, place_departure, place_arrival, date, departure_time, arrival_time, price, user_id, car_id) VALUES (NULL, :place_departure, :place_arrival, :date, :departure_time, :arrival_time, :price, :user_id, :car_id)";
 
     $query = $pdo->prepare($sql);
     $query->bindParam(':place_departure', $place_departure);
@@ -180,6 +180,8 @@ function registerJourney(PDO $pdo, string $place_departure, string $place_arriva
     $query->bindParam(':departure_time', $departure_time);
     $query->bindParam(':arrival_time', $arrival_time);
     $query->bindParam(':price', $price, PDO::PARAM_INT);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $query->bindParam(':car_id', $car_id, PDO::PARAM_INT);
     return $query->execute();
 }
 
@@ -239,4 +241,12 @@ function verifyCreatJourney($journey): array|bool
     } else {
         return true;
     }
+}
+function deleteJourney(PDO $pdo, int $journey_id, int $user_id): bool
+{
+    $sql = "DELETE FROM journeys WHERE id = :journey_id AND id_user = :user_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':journey_id', $journey_id, PDO::PARAM_INT);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    return $query->execute();
 }
