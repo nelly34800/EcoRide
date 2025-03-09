@@ -14,8 +14,19 @@ function addUser(PDO $pdo, string $pseudo, string $email, string $password, stri
     $query->bindValue(':address', $address);
     $query->bindValue(':role_id', $role, PDO::PARAM_INT);
     $query->bindValue(':image', $image);
-
-    return $query->execute();
+    // Exécution de la requête pour insérer l'utilisateur
+    $result = $query->execute();
+    // Si l'utilisateur a été ajouté avec succès, insérer les crédits
+    if ($result) {
+        // Récupérer l'ID de l'utilisateur inséré
+        $user_id = $pdo->lastInsertId();
+        // Préparer la requête pour insérer 20 crédits pour cet utilisateur
+        $creditQuery = $pdo->prepare("INSERT INTO credits (credit, user_id) VALUES (20, :user_id)");
+        $creditQuery->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        // Exécuter la requête pour insérer les crédits
+        return $creditQuery->execute();
+    }
+    return false;
 }
 
 function verifyUser($user): array|bool

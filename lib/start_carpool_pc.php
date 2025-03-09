@@ -23,10 +23,9 @@ try {
         $pdo->commit();
 
         // Redirection avec succès
-        header("Location: ../chauffeur.php?success=1");  // Redirection avec succès
+        header("Location: ../passager_chauffeur.php?success=5");  // Redirection avec succès
         exit();
     } else {
-
         // Annuler la transaction si l'ID du trajet n'est pas trouvé
         throw new Exception("ID du trajet manquant");
     }
@@ -35,6 +34,6 @@ try {
     $pdo->rollBack();
 
     // Redirection avec erreur
-    header("Location: ../chauffeur.php?error=1");  // Redirection en cas d'erreur
+    header("Location: ../passager_chauffeur.php?error=1");  // Redirection en cas d'erreur
     exit();
 }

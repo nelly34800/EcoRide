@@ -12,6 +12,7 @@ if (isset($_POST['journey_id'])) {
     header("Location: ../chauffeur.php?success=2");  // Redirection avec succès
     exit();
 } else {
+
     header("Location: ../chauffeur.php?error=2");  // Redirection en cas d'erreur
     exit();
 }

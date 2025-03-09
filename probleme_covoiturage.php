@@ -12,11 +12,6 @@ require_once "templates/header.php";
     <form action="" method="post">
 
         <div class="mb-3">
-            <label class="form-label" for="carpool-number">numéro du covoiturage : </label>
-            <input type="text" name="carpool number" class="form-control" id="carpool number">
-        </div>
-
-        <div class="mb-3">
             <label class="form-label" for="title">titre du message : </label>
             <input type="text" name="title" class="form-control" id="title">
         </div>

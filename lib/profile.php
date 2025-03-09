@@ -9,69 +9,47 @@ function getUserById($pdo, $user_id)
     return $query->fetch(PDO::FETCH_ASSOC);
 }
 
-function getUserJourneysCompleted($pdo, $user_id)
-//récupère l'historique des passagers 
+function getJourneysByStatus($pdo, $user_id, $status, $role = 'passager')
 {
-    $sql = "SELECT place_departure, place_arrival, departure_time, arrival_time, date FROM journeys 
-            JOIN reservations ON journeys.id = reservations.journey_id 
-            WHERE reservations.user_id = :user_id AND reservations.status = 'completed'
-            ORDER BY journeys.date DESC";
-    $query = $pdo->prepare($sql);
-    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
+    // Sélection de base
+    $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date";
 
-function getUserJourneysUpcoming($pdo, $user_id)
-//récupère les trajet en attente des passagers
-{
-    $sql = "SELECT place_departure, place_arrival, departure_time, arrival_time, date FROM journeys 
-            JOIN reservations ON journeys.id = reservations.journey_id 
-            WHERE reservations.user_id = :user_id AND reservations.status = 'upcoming'";
+    // Ajouter number_places si le rôle est chauffeur ou mixte
+    if ($role === 'chauffeur' || $role === 'passager_chauffeur') {
+        $sql .= ", cars.number_places";
+    }
+
+    $sql .= " FROM journeys";
+
+    // Gestion des rôles
+    if ($role === 'passager') {
+        // Requête pour les passagers uniquement
+        $sql .= " INNER JOIN reservations ON journeys.id = reservations.journey_id 
+                  WHERE reservations.user_id = :user_id AND reservations.status = :status";
+    } elseif ($role === 'chauffeur') {
+        // Requête pour les chauffeurs uniquement (avec jointure sur cars)
+        $sql .= " INNER JOIN cars ON journeys.car_id = cars.id
+                  WHERE journeys.user_id = :user_id AND journeys.status = :status";
+    } elseif ($role === 'passager_chauffeur') {
+        // Requête pour les deux rôles (UNION des deux requêtes)
+        $sql = "(SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date, cars.number_places
+                 FROM journeys 
+                 INNER JOIN cars ON journeys.car_id = cars.id
+                 WHERE journeys.user_id = :user_id AND journeys.status = :status)
+                UNION
+                (SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date 
+                 FROM journeys 
+                 INNER JOIN reservations ON journeys.id = reservations.journey_id 
+                 WHERE reservations.user_id = :user_id AND reservations.status = :status)
+                ORDER BY date DESC";
+    } else {
+        return []; // Si rôle inconnu, on renvoie un tableau vide
+    }
+
     $query = $pdo->prepare($sql);
     $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $query->bindValue(':status', $status, PDO::PARAM_STR);
     $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
-function getPendingCarpools($pdo, $user_id)
-//récupère les trajets en attente du chauffeur
-{
-    $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date, number_places FROM journeys 
-            JOIN cars ON cars.id = journeys.car_id 
-            WHERE journeys.user_id = :user_id AND journeys.status = 'pending'";
-    $query = $pdo->prepare($sql);
-    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
-function getCompletCarpools($pdo, $user_id)
-//récupère les trajets complets du chauffeur
-{
-    $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date FROM journeys 
-            WHERE journeys.user_id = :user_id AND journeys.status = 'complet'";
-    $query = $pdo->prepare($sql);
-    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
-function getOngoingCarpools($pdo, $user_id)
-//récupère les trajets en cours du chauffeur
-{
-    $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date, number_places FROM journeys 
-            JOIN cars ON cars.id = journeys.car_id 
-            WHERE journeys.user_id = :user_id AND journeys.status = 'ongoing'";
-    $query = $pdo->prepare($sql);
-    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $query->execute();
-    return $query->fetchAll(PDO::FETCH_ASSOC);
-}
-function getCompletedCarpools($pdo, $user_id)
-//récupère l'historique des trajets du chauffeur
-{
-    $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date FROM journeys 
-            WHERE journeys.user_id = :user_id AND journeys.status = 'completed'";
-    $query = $pdo->prepare($sql);
-    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $query->execute();
+
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }

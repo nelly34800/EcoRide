@@ -159,7 +159,7 @@ function getJourneysById(PDO $pdo, int $id): array|bool
      FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
-            JOIN driver_preferences ON preferences_id = driver_preferences.id
+            JOIN driver_preferences ON users.id = driver_preferences.user_id
             WHERE journeys.id = :id";
 
     $query = $pdo->prepare($sql);

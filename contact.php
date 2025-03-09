@@ -11,7 +11,7 @@ require_once "templates/header.php";
 
     <form action="" method="post">
 
-        <a class="btn btn-primary" href="problème_covoiturage.php">Signaler un problème pendant un covoiturage</a>
+        <a class="btn btn-primary" href="probleme_covoiturage.php">Signaler un problème pendant un covoiturage</a>
 
         <div class="mb-3">
             <label class="form-label" for="title">titre du message : </label>

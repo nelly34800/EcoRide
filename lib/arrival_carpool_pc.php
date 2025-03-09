@@ -9,9 +9,9 @@ if (isset($_POST['journey_id'])) {
     $query->bindValue(':journey_id', $journey_id, PDO::PARAM_INT);
     $query->execute();
 
-    header("Location: ../passager_chauffeur.php?success=2"); // Redirection avec succès
+    header("Location: ../passager_chauffeur.php?success=1"); // Redirection avec succès
     exit();
 } else {
-    header("Location: ../passager_chauffeur.php?error=2"); // Redirection en cas d'erreur
+    header("Location: ../passager_chauffeur.php?error=1"); // Redirection en cas d'erreur
     exit();
 }

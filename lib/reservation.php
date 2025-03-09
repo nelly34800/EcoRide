@@ -48,3 +48,25 @@ function addReservation($pdo, $user_id, $journey_id, $role_id)
     // Vérifier et mettre à jour le statut du trajet
     verifAndUpdateJourneyStatus($pdo, $journey_id);
 }
+
+function getReservationId(PDO $pdo, int $journey_id, int $user_id): ?int
+{
+    $sql = "SELECT id FROM reservations WHERE journey_id = :journey_id AND user_id = :user_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':journey_id', $journey_id, PDO::PARAM_INT);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $query->execute();
+    $reservation = $query->fetch(PDO::FETCH_ASSOC);
+    //  si une réservation est trouvée ,retourne son id, sinon retourne null
+    return $reservation ? $reservation['id'] : null;
+}
+
+function deleteReservation(PDO $pdo, int $reservation_id, int $journey_id, int $user_id): bool
+{
+    $sql = "DELETE FROM reservations WHERE id = :reservation_id AND journey_id = :journey_id AND user_id = :user_id";
+    $query = $pdo->prepare($sql);
+    $query->bindParam(':reservation_id', $reservation_id, PDO::PARAM_INT);
+    $query->bindParam(':journey_id', $journey_id, PDO::PARAM_INT);
+    $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    return $query->execute();
+}

@@ -4,7 +4,6 @@ require_once "lib/journey.php";
 require_once "lib/car.php";
 require_once "lib/pdo.php";
 
-
 if (!isset($_SESSION['user']['id'])) {
     die("Erreur : Utilisateur non connecté.");
 }

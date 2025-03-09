@@ -27,10 +27,10 @@ if ($error404) {
 verifRole(2);
 
 // Récupérer les trajets du chauffeur
-$pending = getPendingCarpools($pdo, $user_id);
-$complet = getCompletCarpools($pdo, $user_id);
-$ongoing = getOngoingCarpools($pdo, $user_id);
-$completed = getCompletedCarpools($pdo, $user_id);
+$pending = getJourneysByStatus($pdo, $user_id, 'pending', 'chauffeur');
+$complet = getJourneysByStatus($pdo, $user_id, 'complet', 'chauffeur');
+$ongoing = getJourneysByStatus($pdo, $user_id, 'ongoing', 'chauffeur');
+$completed = getJourneysByStatus($pdo, $user_id, 'completed', 'chauffeur');
 
 if (isset($_GET['success'])): ?>
     <?php if ($_GET['success'] == 1): ?>
