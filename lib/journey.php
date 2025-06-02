@@ -35,7 +35,7 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $f
         "place_departure = :place_departure",
         "place_arrival = :place_arrival",
         "date = :date",
-        "(cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) > 0"
+        "(available_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0"
     ];
     $params = [
         ":place_departure" => $place_departure,
@@ -61,9 +61,9 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $f
     }
 
     $where = implode(" AND ", $conditions);
-    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date, 
-    cars.number_places, cars.energy, users.pseudo, users.image,
-     (cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
+    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.available_seats, journeys.price, journeys.date, 
+     cars.energy, users.pseudo, users.image,
+     (journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
             FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
@@ -94,7 +94,7 @@ function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date
         "place_departure = :place_departure",
         "place_arrival = :place_arrival",
         "date != :date",
-        "(cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) > 0"
+        "(journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0"
     ];
     $params = [
         ":place_departure" => $place_departure,
@@ -119,13 +119,13 @@ function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date
         $params[':max_duration'] = $max_duration_minutes;
     }
     // Ajoutez la condition pour les places restantes
-    $conditions[] = "(cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) > 0";
+    $conditions[] = "(journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0";
 
     $where = implode(" AND ", $conditions);
     // Si aucune date trouvée, recherche des dates différentes
-    $sql_other = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date,
-            cars.number_places, cars.energy, users.pseudo, users.image,
-            (cars.number_places - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
+    $sql_other = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.available_seats, journeys.price, journeys.date,
+         cars.energy, users.pseudo, users.image,
+            (journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
              FROM journeys
                     JOIN users ON user_id = users.id
                     JOIN cars ON car_id = cars.id
@@ -154,8 +154,8 @@ function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date
 
 function getJourneysById(PDO $pdo, int $id): array|bool
 {
-    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.price, journeys.date,
-    cars.brand, cars.model, cars.color, cars.number_places, cars.energy, users.pseudo, users.image, driver_preferences.pets, driver_preferences.smoking, driver_preferences.others
+    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.available_seats, journeys.price, journeys.date,
+    cars.brand, cars.model, cars.color, cars.energy, users.pseudo, users.image, driver_preferences.pets, driver_preferences.smoking, driver_preferences.others
      FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
@@ -168,10 +168,10 @@ function getJourneysById(PDO $pdo, int $id): array|bool
     return $query->fetch(PDO::FETCH_ASSOC);
 }
 
-function registerJourney(PDO $pdo, string $place_departure, string $place_arrival, string $date, string $departure_time, string $arrival_time, int $price,  int $user_id, int $car_id)
+function registerJourney(PDO $pdo, string $place_departure, string $place_arrival, string $date, string $departure_time, string $arrival_time, int $available_seats, int $price,  int $user_id, int $car_id)
 {
 
-    $sql = "INSERT INTO journeys (id, place_departure, place_arrival, date, departure_time, arrival_time, price, user_id, car_id) VALUES (NULL, :place_departure, :place_arrival, :date, :departure_time, :arrival_time, :price, :user_id, :car_id)";
+    $sql = "INSERT INTO journeys (id, place_departure, place_arrival, date, departure_time, arrival_time, available_seats, price, user_id, car_id) VALUES (NULL, :place_departure, :place_arrival, :date, :departure_time, :arrival_time, :available_seats, :price, :user_id, :car_id)";
 
     $query = $pdo->prepare($sql);
     $query->bindParam(':place_departure', $place_departure);
@@ -179,6 +179,7 @@ function registerJourney(PDO $pdo, string $place_departure, string $place_arriva
     $query->bindParam(':date', $date);
     $query->bindParam(':departure_time', $departure_time);
     $query->bindParam(':arrival_time', $arrival_time);
+    $query->bindParam(':available_seats', $available_seats, PDO::PARAM_INT);
     $query->bindParam(':price', $price, PDO::PARAM_INT);
     $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $query->bindParam(':car_id', $car_id, PDO::PARAM_INT);
@@ -227,7 +228,13 @@ function verifyCreatJourney($journey): array|bool
     } else {
         $errors["arrival_time"] = "Le champ heure d'arrivée été envoyé";
     }
-
+    if (isset($journey["available_seats"])) {
+        if ($journey["available_seats"] === "") {
+            $errors["available_seats"] = "Le champ nombre de places disponibles est obligatoire";
+        }
+    } else {
+        $errors["available_seats"] = "Le champ nombre de places disponibles été envoyé";
+    }
     if (isset($journey["price"])) {
         if ($journey["price"] === "") {
             $errors["price"] = "Le champ prix est obligatoire";
@@ -244,9 +251,20 @@ function verifyCreatJourney($journey): array|bool
 }
 function deleteJourney(PDO $pdo, int $journey_id, int $user_id): bool
 {
-    $sql = "DELETE FROM journeys WHERE id = :journey_id AND id_user = :user_id";
+    $sql = "DELETE FROM journeys WHERE id = :journey_id AND user_id = :user_id";
     $query = $pdo->prepare($sql);
     $query->bindParam(':journey_id', $journey_id, PDO::PARAM_INT);
     $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     return $query->execute();
+}
+
+function getDriverByJourney($pdo, $journey_id) {
+    $sql = "SELECT u.email, u.pseudo
+            FROM journeys j
+            JOIN users u ON j.user_id = u.id
+            WHERE j.id = :journey_id ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':journey_id', $journey_id, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }

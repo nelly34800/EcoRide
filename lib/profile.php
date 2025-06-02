@@ -2,7 +2,7 @@
 function getUserById($pdo, $user_id)
 //récupère les infos du profil
 {
-    $sql = "SELECT id, pseudo, image FROM users WHERE id = :user_id";
+    $sql = "SELECT id, pseudo, email, image, role_id FROM users WHERE id = :user_id";
     $query = $pdo->prepare($sql);
     $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
     $query->execute();
@@ -14,9 +14,9 @@ function getJourneysByStatus($pdo, $user_id, $status, $role = 'passager')
     // Sélection de base
     $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date";
 
-    // Ajouter number_places si le rôle est chauffeur ou mixte
+    // Ajouter available_seats si le rôle est chauffeur ou mixte
     if ($role === 'chauffeur' || $role === 'passager_chauffeur') {
-        $sql .= ", cars.number_places";
+        $sql .= ", journeys.available_seats";
     }
 
     $sql .= " FROM journeys";
@@ -27,14 +27,12 @@ function getJourneysByStatus($pdo, $user_id, $status, $role = 'passager')
         $sql .= " INNER JOIN reservations ON journeys.id = reservations.journey_id 
                   WHERE reservations.user_id = :user_id AND reservations.status = :status";
     } elseif ($role === 'chauffeur') {
-        // Requête pour les chauffeurs uniquement (avec jointure sur cars)
-        $sql .= " INNER JOIN cars ON journeys.car_id = cars.id
-                  WHERE journeys.user_id = :user_id AND journeys.status = :status";
+        // Requête pour les chauffeurs uniquement 
+            $sql .= " WHERE journeys.user_id = :user_id AND journeys.status = :status";
     } elseif ($role === 'passager_chauffeur') {
         // Requête pour les deux rôles (UNION des deux requêtes)
-        $sql = "(SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date, cars.number_places
+        $sql = "(SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, available_seats, date
                  FROM journeys 
-                 INNER JOIN cars ON journeys.car_id = cars.id
                  WHERE journeys.user_id = :user_id AND journeys.status = :status)
                 UNION
                 (SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date 

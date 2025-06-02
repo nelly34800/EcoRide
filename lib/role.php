@@ -1,4 +1,5 @@
 <?php
+require_once "pdo.php";
 //fonction qui recupère les rôles de la bdd pour le formulaire d'inscription
 function getRoles(PDO $pdo)
 {

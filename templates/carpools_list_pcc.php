@@ -30,7 +30,7 @@ function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = tru
                     <td class='d-none d-md-table-cell'>" . htmlspecialchars(changeHourFormat($journey['arrival_time'])) . "</td>";
             // Affichage de la colonne "Places dispo" uniquement si $showPlaces est vrai
             if ($showPlaces) {
-                echo "<td class='d-none d-md-table-cell'>" . htmlspecialchars($journey['number_places']) . "</td>";
+                echo "<td class='d-none d-md-table-cell'>" . htmlspecialchars($journey['available_seats']) . "</td>";
             }
 
             echo "<td class='d-none d-md-table-cell'>
@@ -49,7 +49,7 @@ function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = tru
                         <strong>Arrivée :</strong> " . htmlspecialchars($journey['place_arrival']) . " - " . htmlspecialchars(changeHourFormat($journey['arrival_time'])) . "<br>";
 
             if ($showPlaces) {
-                echo "<strong>Places disponibles :</strong> " . htmlspecialchars($journey['number_places']) . "<br>";
+                echo "<strong>Places disponibles :</strong> " . htmlspecialchars($journey['available_seats']) . "<br>";
             }
 
             echo "  <form method='POST' action='$action'>

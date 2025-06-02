@@ -14,7 +14,6 @@ $car = [
     'brand' => '',
     'model' => '',
     'color' => '',
-    'number_places' => '',
     'energy' => '',
     'registration' => '',
     'date_first_registration' => '',
@@ -35,9 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($verif === true) {
         if ($car_id) {
             // Si il y'en a une on modifie la voiture
-            updateCar($pdo, $car_id, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["number_places"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"]);
+            updateCar($pdo, $car_id, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"]);
         } else { //si on ajoute une voiture
-            registerCar($pdo, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["number_places"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"], $user_id);
+            registerCar($pdo, $_POST["brand"], $_POST["model"], $_POST["color"], $_POST["energy"], $_POST["registration"], $_POST["date_first_registration"], $user_id);
         }
         header("Location: voitures.php");
         exit();
@@ -79,15 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
             <?php } ?>
         </div>
-        <div class="mb-2">
-            <label for="number_places">Nombre de places disponibles: </label>
-            <input type="number" min="1" max="8" name="number_places" class="form-control" id="number_places" value="<?= htmlspecialchars($car['number_places']); ?>">
-            <?php if (isset($errors["number_places"])) { ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors["number_places"] ?>
-                </div>
-            <?php } ?>
-        </div>
+       
         <fieldset class="mb-2">
             <legend>Énérgie: </legend>
             <input type="radio" id="electric" name="energy" value="éléctrique" />

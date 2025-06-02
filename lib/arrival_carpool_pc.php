@@ -1,5 +1,7 @@
 <?php
 require_once "pdo.php";
+require_once "reservation.php";
+require_once "send_email.php";
 
 if (isset($_POST['journey_id'])) {
     $journey_id = $_POST['journey_id'];

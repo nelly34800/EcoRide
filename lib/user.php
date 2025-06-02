@@ -109,3 +109,4 @@ function verifyUserLoginPassword(PDO $pdo, string $email, string $password): boo
         return false;
     }
 }
+

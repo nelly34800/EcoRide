@@ -1,5 +1,5 @@
 <?php
-function showReservations($title, $journeys,  $textBouton1, $action1, $textBouton2, $action2)
+function showReservations($title, $journeys, $textBouton1, $action1, $textBouton2, $action2)
 {
     echo "<div class='table-responsive p-4'>";
     echo "<h4>$title</h4>";

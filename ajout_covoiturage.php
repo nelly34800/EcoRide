@@ -11,14 +11,16 @@ $user_id = $_SESSION['user']['id'];
 $cars = getUserCars($pdo, $user_id);
 
 $errors = [];
+$car_id = null; 
 $journey = [
     'place_departure' => '',
     'place_arrival' => '',
     'date' => '',
     'departure_time' => '',
     'arrival_time' => '',
+    'available_seats' => '',
     'price' => '',
-    'car_id' => '',
+    'car_id' => $car_id,
 ];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -27,10 +29,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!$car_id) {
         $errors['car_id'] = "Erreur : Vous devez choisir une voiture.";
     }
+    if (!isset($_POST['available_seats']) || !is_numeric($_POST['available_seats']) || $_POST['available_seats'] < 1 || $_POST['available_seats'] > 8) {
+        $errors['available_seats'] = "Le nombre de places doit être compris entre 1 et 8.";
+    }
+
     if (empty($errors)) { // s'execute seulement s'il n'y a aucune erreur
         $verif = verifyCreatJourney($_POST);
         if ($verif === true) {
-            registerJourney($pdo, $_POST["place_departure"], $_POST["place_arrival"], $_POST["date"], $_POST["departure_time"], $_POST["arrival_time"], $_POST["price"], $user_id, $car_id);
+            registerJourney($pdo, $_POST["place_departure"], $_POST["place_arrival"], $_POST["date"], $_POST["departure_time"], $_POST["arrival_time"], $_POST["available_seats"], $_POST["price"], $user_id, $car_id);
             header("Location: chauffeur.php");
             exit();
         } else {
@@ -45,6 +51,7 @@ $journey = [
     'date' => $_POST['date'] ?? '',
     'departure_time' => $_POST['departure_time'] ?? '',
     'arrival_time' => $_POST['arrival_time'] ?? '',
+    'available_seats' => $_POST['available_seats'] ?? '',
     'price' => $_POST['price'] ?? '',
     'car_id' => $car_id,  // Prend la valeur validée de $car_id
 ];
@@ -80,9 +87,19 @@ $journey = [
             <input type="time" name="arrival_time" class="form-control" id="arrival_time" value="<?= htmlspecialchars($journey['arrival_time']); ?>">
         </div>
         <div class="mb-1">
+            <label  class="form-label" for="available_seats">Nombre de places disponibles: </label>
+            <input type="number" min="1" max="8" name="available_seats" class="form-control" id="available_seats" value="<?= htmlspecialchars($journey['available_seats']); ?>">
+            <?php if (isset($errors["available_seats"])) { ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= $errors["available_seats"] ?>
+                </div>
+            <?php } ?>
+        </div>
+        <div class="mb-1">
             <label class="form-label" for="price">tarif: </label>
             <div class="input-group">
                 <input type="number" min="1" name="price" id="price" class="form-control" value="<?= htmlspecialchars($journey['price']); ?>">
+                
                 <span class="input-group-text">Crédits par passager: </span>
             </div>
         </div>

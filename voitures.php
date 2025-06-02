@@ -32,7 +32,6 @@ if (isset($_GET['success'])): ?>
                             <p class="card-text">marque: <?= htmlspecialchars($car['brand']); ?></p>
                             <p class="card-text">modèle: <?= htmlspecialchars($car['model']); ?></p>
                             <p class="card-text">couleur: <?= htmlspecialchars($car['color']); ?></p>
-                            <p class="card-text">place: <?= htmlspecialchars($car['number_places']); ?></p>
                             <p class="card-text">energie: <?= htmlspecialchars($car['energy']); ?></p>
                             <p class="card-text">immatriculation: <?= htmlspecialchars($car['registration']); ?></p>
                             <p class="card-text">date de 1ère immatriculation: <br> <?= htmlspecialchars(changeDateFormat($car['date_first_registration'])); ?></p>

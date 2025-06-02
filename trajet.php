@@ -1,6 +1,6 @@
 <?php
 require_once "templates/header.php";
-require_once "Lib/pdo.php";
+require_once "lib/pdo.php";
 require_once "lib/journey.php";
 require_once "lib/utils.php";
 
@@ -29,7 +29,7 @@ if (isset($_GET["id"])) {
                     heure arrivée prévue: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?> <br>
                     durée prévue du trajet: <?= htmlspecialchars(journeyTime($journey['departure_time'], $journey['arrival_time'])); ?> <br></p>
                 <p class="card-text-light">
-                    place dispo: <?= htmlspecialchars($journey['number_places']); ?> <br></p>
+                    place dispo: <?= htmlspecialchars($journey['available_seats']); ?> <br></p>
                 <p class="card-text-light">
                     voyage éco: <?php convertEnergy($journey['energy']); ?> <br>
                     marque: <?= htmlspecialchars($journey['brand']); ?> <br>
