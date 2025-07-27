@@ -12,6 +12,7 @@ $error404 = false;
 if (isset($_SESSION['user'])) {
     // Récupérer l'ID de l'utilisateur depuis la session
     $user_id = $_SESSION['user']['id'];
+    $credit = getCreditById($pdo, $user_id);
     $user = getUserById($pdo, $user_id);
     if (!$user) {
         $error404 = true;
@@ -37,8 +38,6 @@ if (isset($_GET['success'])): ?>
         <div class="alert alert-success">Covoiturage démarré avec succès !</div>
     <?php elseif ($_GET['success'] == 2): ?>
         <div class="alert alert-success">Trajet terminé avec succès !</div>
-    <?php elseif ($_GET['success'] == 3): ?>
-        <div class="alert alert-success">Covoiturage supprimé avec succès !</div>
     <?php endif; ?>
 <?php elseif (isset($_GET['error'])): ?>
     <div class="alert alert-danger">Erreur lors de l'opération.</div>
@@ -59,6 +58,7 @@ if (isset($_GET['success'])): ?>
             <div class="col-md-3 p-2">
                 <h1> <?= htmlspecialchars($user["pseudo"]) ?> </h1><br>
                 <img src="<?= htmlspecialchars(getAvatar($user['image'])); ?>" class="bd-placeholder-img rounded-circle" width="100" height="100" alt="photo de l'utilisateur"><br>
+                <p>Crédits disponibles : <strong><?= htmlspecialchars($credit) ?></strong></p><br>
                 <a class="text-center" href="ajout_covoiturage.php">Ajouter un covoiturage</a><br>
                 <a class="text-center" href="voitures.php">Gérer mes voitures</a><br>
                 <a class="text-center" href="preferences_chauffeur.php">Gérer mes préférences</a><br>

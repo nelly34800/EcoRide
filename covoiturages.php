@@ -22,7 +22,7 @@ if (isset($_GET['max_duration']) && $_GET['max_duration'] !== "") {
 
 
 // Appel à la fonction pour obtenir les covoiturages
-$journeys = getJourneys($pdo, $place_departure, $place_arrival, $date, $filters);
+$journeys = searchJourneys($pdo, $place_departure, $place_arrival, $date, $filters);
 ?>
 <div class="hero-scene">
     <img src="assets/img/BanCovoiturage.jpg" alt="" width="100%">
@@ -65,19 +65,19 @@ $journeys = getJourneys($pdo, $place_departure, $place_arrival, $date, $filters)
                 </div>
             </form>
         </div>
-
-        <div class="col-md-9">
+<div class="col-md-9">
+     <h1>Pour votre trajet de <?= htmlspecialchars($place_departure); ?> à <?= htmlspecialchars($place_arrival); ?> :</h1>
             <div class="row">
                 <?php
                 // Affichage des trajets en fonction des filtres
                 showJourneys($journeys);
                 if (count($journeys) == 0) {
-                    $journey_other_dates = getJourneysOtherDates($pdo, $place_departure, $place_arrival, $date, $filters);
+                    $journey_other_dates = searchJourneys($pdo, $place_departure, $place_arrival, $date, $filters, false);
                     showJourneysOtherDates($journey_other_dates);
                 }
-
                 ?>
             </div>
+        
         </div>
     </div>
 </div>

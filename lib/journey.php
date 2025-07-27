@@ -29,41 +29,50 @@ function verifyJourneys($journeys)
     return true;
 }
 
-function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $filters = []): array
+function searchJourneys(PDO $pdo, string $place_departure, string $place_arrival, string $date, array $filters = [], bool $exactDate = true): array
 {
     $conditions = [
-        "place_departure = :place_departure",
-        "place_arrival = :place_arrival",
-        "date = :date",
-        "(available_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0"
+        "LOWER(place_departure) = LOWER(:place_departure)",
+        "LOWER(place_arrival) = LOWER(:place_arrival)",
+        "(journeys.total_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0"
     ];
+
     $params = [
         ":place_departure" => $place_departure,
         ":place_arrival" => $place_arrival,
-        ":date" => $date
     ];
 
-    // Filtre pour le prix maximum
+    // Filtrage sur la date
+    if ($exactDate) {
+        $conditions[] = "date = :date";
+    } else {
+        $conditions[] = "date != :date";
+    }
+    $params[':date'] = $date;
+
+    // Filtrage sur le prix
     if (!empty($filters['max_price'])) {
         $conditions[] = "price <= :max_price";
         $params[':max_price'] = $filters['max_price'];
     }
 
-    // Filtre pour l'énergie écologique
+    // Filtrage sur le type de carburant
     if (!empty($filters['energy']) && $filters['energy'] === "eco") {
         $conditions[] = "cars.energy IN ('éléctrique', 'hybride')";
     }
-    // Filtre pour la durée maximale
+
+    // Filtrage sur la durée
     if (!empty($filters['max_duration'])) {
-        $max_duration_minutes = $filters['max_duration'] * 60;
         $conditions[] = "TIMESTAMPDIFF(MINUTE, journeys.departure_time, journeys.arrival_time) <= :max_duration";
-        $params[':max_duration'] = $max_duration_minutes;
+        $params[':max_duration'] = $filters['max_duration'] * 60;
     }
 
     $where = implode(" AND ", $conditions);
-    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.available_seats, journeys.price, journeys.date, 
-     cars.energy, users.pseudo, users.image,
-     (journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
+
+    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, 
+                   journeys.total_seats, journeys.price, journeys.date, 
+                   cars.energy, users.pseudo, users.image,
+                   (journeys.total_seats - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
             FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
@@ -76,90 +85,22 @@ function getJourneys(PDO $pdo, $place_departure, $place_arrival, $date, array $f
             WHERE $where";
 
     $query = $pdo->prepare($sql);
-
     foreach ($params as $key => $value) {
         $query->bindValue($key, $value);
     }
-
     $query->execute();
 
-    // Récupérer tous les trajets
     return $query->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
-function getJourneysOtherDates(PDO $pdo, $place_departure, $place_arrival, $date, array $filters = []): array
-{
-    $conditions = [
-        "place_departure = :place_departure",
-        "place_arrival = :place_arrival",
-        "date != :date",
-        "(journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0"
-    ];
-    $params = [
-        ":place_departure" => $place_departure,
-        ":place_arrival" => $place_arrival,
-        ":date" => $date
-    ];
-
-    // Filtre pour le prix maximum
-    if (!empty($filters['max_price'])) {
-        $conditions[] = "price <= :max_price";
-        $params[':max_price'] = $filters['max_price'];
-    }
-
-    // Filtre pour l'énergie écologique
-    if (!empty($filters['energy']) && $filters['energy'] === "eco") {
-        $conditions[] = "cars.energy IN ('éléctrique', 'hybride')";
-    }
-    // Filtre pour la durée maximale
-    if (!empty($filters['max_duration'])) {
-        $max_duration_minutes = $filters['max_duration'] * 60;
-        $conditions[] = "TIMESTAMPDIFF(MINUTE, journeys.departure_time, journeys.arrival_time) <= :max_duration";
-        $params[':max_duration'] = $max_duration_minutes;
-    }
-    // Ajoutez la condition pour les places restantes
-    $conditions[] = "(journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) > 0";
-
-    $where = implode(" AND ", $conditions);
-    // Si aucune date trouvée, recherche des dates différentes
-    $sql_other = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.available_seats, journeys.price, journeys.date,
-         cars.energy, users.pseudo, users.image,
-            (journeys.available_seats - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
-             FROM journeys
-                    JOIN users ON user_id = users.id
-                    JOIN cars ON car_id = cars.id
-                     LEFT JOIN (
-                      SELECT journey_id, COUNT(*) AS reserved_count
-                      FROM reservations
-                      WHERE status = 'upcoming'
-                      GROUP BY journey_id
-                  ) AS reservation_counts ON journeys.id = reservation_counts.journey_id
-                     WHERE $where";
-
-    // Préparer la requête pour l'itinéraire avec une date différente
-    $query_date_other = $pdo->prepare($sql_other);
-
-    // Lier les paramètres
-    foreach ($params as $key => $value) {
-        $query_date_other->bindValue($key, $value);
-    }
-
-    // Exécuter la requête
-    $query_date_other->execute();
-
-    // Récupérer l'itinéraire avec une date différente
-    return $query_date_other->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getJourneysById(PDO $pdo, int $id): array|bool
 {
-    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.available_seats, journeys.price, journeys.date,
+    $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.total_seats, journeys.price, journeys.date,
     cars.brand, cars.model, cars.color, cars.energy, users.pseudo, users.image, driver_preferences.pets, driver_preferences.smoking, driver_preferences.others
      FROM journeys
             JOIN users ON user_id = users.id
             JOIN cars ON car_id = cars.id
-            JOIN driver_preferences ON users.id = driver_preferences.user_id
+            LEFT JOIN driver_preferences ON users.id = driver_preferences.user_id
             WHERE journeys.id = :id";
 
     $query = $pdo->prepare($sql);
@@ -168,10 +109,10 @@ function getJourneysById(PDO $pdo, int $id): array|bool
     return $query->fetch(PDO::FETCH_ASSOC);
 }
 
-function registerJourney(PDO $pdo, string $place_departure, string $place_arrival, string $date, string $departure_time, string $arrival_time, int $available_seats, int $price,  int $user_id, int $car_id)
+function registerJourney(PDO $pdo, string $place_departure, string $place_arrival, string $date, string $departure_time, string $arrival_time, int $total_seats, int $price,  int $user_id, int $car_id)
 {
 
-    $sql = "INSERT INTO journeys (id, place_departure, place_arrival, date, departure_time, arrival_time, available_seats, price, user_id, car_id) VALUES (NULL, :place_departure, :place_arrival, :date, :departure_time, :arrival_time, :available_seats, :price, :user_id, :car_id)";
+    $sql = "INSERT INTO journeys (id, place_departure, place_arrival, date, departure_time, arrival_time, total_seats, price, user_id, car_id) VALUES (NULL, :place_departure, :place_arrival, :date, :departure_time, :arrival_time, :total_seats, :price, :user_id, :car_id)";
 
     $query = $pdo->prepare($sql);
     $query->bindParam(':place_departure', $place_departure);
@@ -179,7 +120,7 @@ function registerJourney(PDO $pdo, string $place_departure, string $place_arriva
     $query->bindParam(':date', $date);
     $query->bindParam(':departure_time', $departure_time);
     $query->bindParam(':arrival_time', $arrival_time);
-    $query->bindParam(':available_seats', $available_seats, PDO::PARAM_INT);
+    $query->bindParam(':total_seats', $total_seats, PDO::PARAM_INT);
     $query->bindParam(':price', $price, PDO::PARAM_INT);
     $query->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $query->bindParam(':car_id', $car_id, PDO::PARAM_INT);
@@ -218,7 +159,7 @@ function verifyCreatJourney($journey): array|bool
             $errors["departure_time"] = "Le champ heure de départ est obligatoire";
         }
     } else {
-        $errors["departure_time"] = "Le champ heure de départ été envoyé";
+        $errors["departure_time"] = "Le champ heure de départ n'a pas été envoyé";
     }
 
     if (isset($journey["arrival_time"])) {
@@ -226,21 +167,21 @@ function verifyCreatJourney($journey): array|bool
             $errors["arrival_time"] = "Le champ heure d'arrivée est obligatoire";
         }
     } else {
-        $errors["arrival_time"] = "Le champ heure d'arrivée été envoyé";
+        $errors["arrival_time"] = "Le champ heure d'arrivée n'a pas été envoyé";
     }
-    if (isset($journey["available_seats"])) {
-        if ($journey["available_seats"] === "") {
-            $errors["available_seats"] = "Le champ nombre de places disponibles est obligatoire";
+    if (isset($journey["total_seats"])) {
+        if ($journey["total_seats"] === "") {
+            $errors["total_seats"] = "Le champ nombre de places disponibles est obligatoire";
         }
     } else {
-        $errors["available_seats"] = "Le champ nombre de places disponibles été envoyé";
+        $errors["total_seats"] = "Le champ nombre de places disponibles n'a pas été envoyé";
     }
     if (isset($journey["price"])) {
         if ($journey["price"] === "") {
             $errors["price"] = "Le champ prix est obligatoire";
         }
     } else {
-        $errors["price"] = "Le champ prix été envoyé";
+        $errors["price"] = "Le champ prix n'a pas été envoyé";
     }
 
     if (count($errors)) {

@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="form-floating">
             <label class="form-label" for="brand">marque: </label>
-            <input type="texte" name="brand" class="form-control" id="brand" value="<?= htmlspecialchars($car['brand']); ?>">
+            <input type="text" name="brand" class="form-control" id="brand" value="<?= htmlspecialchars($car['brand']); ?>">
             <?php if (isset($errors["brand"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["brand"] ?>
@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
         <div class="form-floating">
             <label class="form-label" for="model">modèle: </label>
-            <input type="texte" name="model" class="form-control" id="model" value="<?= htmlspecialchars($car['model']); ?>">
+            <input type="text" name="model" class="form-control" id="model" value="<?= htmlspecialchars($car['model']); ?>">
             <?php if (isset($errors["model"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["model"] ?>
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
         <div class="form-floating">
             <label class="form-label" for="color">couleur: </label>
-            <input type="texte" name="color" class="form-control" id="color" value="<?= htmlspecialchars($car['color']); ?>">
+            <input type="text" name="color" class="form-control" id="color" value="<?= htmlspecialchars($car['color']); ?>">
             <?php if (isset($errors["color"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["color"] ?>
@@ -81,13 +81,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
        
         <fieldset class="mb-2">
             <legend>Énérgie: </legend>
-            <input type="radio" id="electric" name="energy" value="éléctrique" />
+            <input type="radio" id="electric" name="energy" value="éléctrique"  <?= (htmlspecialchars($car['energy']) === 'éléctrique') ? 'checked' : '' ?> />
             <label for="electric">éléctrique</label>
-            <input type="radio" id="hybrid" name="energy" value="hybride" />
+            <input type="radio" id="hybrid" name="energy" value="hybride"  <?= (htmlspecialchars($car['energy']) === 'hybride') ? 'checked' : '' ?> />
             <label for="hybrid">hybride</label><br>
-            <input type="radio" id="gas" name="energy" value="essence" />
+            <input type="radio" id="gas" name="energy" value="essence"  <?= (htmlspecialchars($car['energy']) === 'essence') ? 'checked' : '' ?>  />
             <label for="gas">essence</label>
-            <input type="radio" id="diesel" name="energy" value="diesel" />
+            <input type="radio" id="diesel" name="energy" value="diesel"  <?= (htmlspecialchars($car['energy']) === 'diesel') ? 'checked' : '' ?>  />
             <label for="diesel">diesel</label>
             <?php if (isset($errors["energy"])) { ?>
                 <div class="alert alert-danger" role="alert">
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </fieldset>
         <div class="mb-2">
             <label class="form-label" for="registration">Numéro de plaque d'immatriculation: </label>
-            <input type="texte" name="registration" class="form-control" id="registration" value="<?= htmlspecialchars($car['registration']); ?>">
+            <input type="text" name="registration" class="form-control" id="registration" value="<?= htmlspecialchars($car['registration']); ?>">
             <?php if (isset($errors["registration"])) { ?>
                 <div class="alert alert-danger" role="alert">
                     <?= $errors["registration"] ?>

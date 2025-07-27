@@ -57,15 +57,15 @@ function sendConfirmationEmails($pdo, $user_id, $journey, $journey_id) {
     $pseudo = $userInfo['pseudo'];
     $typeMessage = "Confirmation de réservation";
     $messageHtml = "<p>Bonjour " . htmlspecialchars($pseudo) . ",</p>";
-    $messageHtml .= "<p>Votre réservation pour le trajet de <strong>" 
+    $messageHtml .= "<p>Votre réservation pour le trajet de " 
         . htmlspecialchars($journey['place_departure']) 
-        . "</strong> à <strong>" 
+        . " à " 
         . htmlspecialchars($journey['place_arrival']) 
-        . "</strong> le <strong>" 
+        . " le " 
         . htmlspecialchars(changeDateFormatJour($journey['date'])) 
-        . "</strong> à <strong>" 
+        . " à " 
         . htmlspecialchars(changeHourFormat($journey['departure_time'])) 
-        . "</strong> a bien été confirmée !</p>";
+        . " a bien été confirmée !</p>";
     $messageHtml .= "<p>Merci pour votre confiance.</p>";
 
     if (!sendBrevoMail($email, $pseudo, $typeMessage, $messageHtml)) {
@@ -118,7 +118,7 @@ switch ($action) {
         if (deductCredits($pdo, $user_id, $journey['price']) && addReservation($pdo, $user_id, $journey_id, $role_id)) {
             sendConfirmationEmails($pdo, $user_id, $journey, $journey_id);
             echo '<div class="alert alert-success text-center">Votre réservation a été confirmée avec succès !</div>';
-            echo '<meta http-equiv="refresh" content="2;url=confirmation.php?status=success">';
+            echo '<meta http-equiv="refresh" content="2;url=confirmation.php?type=reservation&status=success">';
         } else {
             echo '<div class="alert alert-danger text-center">Erreur lors du traitement de la réservation.</div>';
         }

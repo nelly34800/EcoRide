@@ -15,13 +15,13 @@ $user_id = $_SESSION['user']['id'];
 $journey_id = isset($_GET['id']) ? (int) $_GET['id'] : null; // Vérification et conversion en entier; Récupérer l'ID de la réservation à supprimer
 
 if (!$journey_id || !($reservation_id = getReservationId($pdo, $journey_id, $user_id))) {
-    header("Location: passager.php?error");
+    header("Location: confirmation.php?type=annulation&status=error");
     exit();
 }
 
 // Supprimer la réservation, mettre à jour les places et récupérer le prix du trajet
 deleteReservation($pdo, $reservation_id, $journey_id, $user_id);
-updateAvailableSeats($pdo, $journey_id, 1);
+verifAndUpdateJourneyStatus($pdo, $journey_id);
 $journey_data = getJourneysById($pdo, $journey_id);
 
 // Vérifier et rembourser les crédits
@@ -33,10 +33,17 @@ if ($journey_data && isset($journey_data['price'])) {
    // Envoie un mail au chauffeur
     if ($driver && isset($driver['email'], $driver['pseudo'])) {
        $typeMessage = "annulation  de réservation de trajet";
-       $messageHtml = "Désolé, un passager a annulé sa réservation de trajet.<br><br>
-Merci pour votre engagement dans la communauté EcoRide ! 🚗💬";
+       $messageHtml = "<p>Bonjour " . htmlspecialchars($driver['pseudo']) . ",</p>";
+       $messageHtml .= "Désolé, un passager a annulé sa réservation de trajet." 
+                . htmlspecialchars($journey['place_departure']) 
+                . "</strong> à <strong>" 
+                . htmlspecialchars($journey['place_arrival']) 
+                . "</strong> le <strong>" 
+                . htmlspecialchars(changeDateFormatJour($journey['date'])) 
+                . "</strong> 🚗💬</p>";
+            $messageHtml .= "<p>Merci pour votre engagement dans la communauté EcoRide ! 🚗💬</p>";
        
        sendBrevoMail($driver['email'], $driver['pseudo'], $typeMessage, $messageHtml);
         }
-header("Location: passager.php?success=2"); 
+header("Location: confirmation.php?type=annulation&status=success"); 
 exit();

@@ -50,7 +50,7 @@ function verifyCar($car): array|bool
             $errors["registration"] = "Le champ numéro de plaque d'immatriculation est obligatoire";
         }
     } else {
-        $errors["color"] = "Le champ numéro de plaque d'immatriculation n'a pas été envoyé";
+        $errors["registration"] = "Le champ numéro de plaque d'immatriculation n'a pas été envoyé";
     }
     if (isset($car["date_first_registration"])) {
         if ($car["date_first_registration"] === "") {

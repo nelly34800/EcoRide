@@ -14,9 +14,9 @@ function getJourneysByStatus($pdo, $user_id, $status, $role = 'passager')
     // Sélection de base
     $sql = "SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, date";
 
-    // Ajouter available_seats si le rôle est chauffeur ou mixte
+    // Ajouter total_seats si le rôle est chauffeur ou mixte
     if ($role === 'chauffeur' || $role === 'passager_chauffeur') {
-        $sql .= ", journeys.available_seats";
+        $sql .= ", journeys.total_seats";
     }
 
     $sql .= " FROM journeys";
@@ -31,7 +31,7 @@ function getJourneysByStatus($pdo, $user_id, $status, $role = 'passager')
             $sql .= " WHERE journeys.user_id = :user_id AND journeys.status = :status";
     } elseif ($role === 'passager_chauffeur') {
         // Requête pour les deux rôles (UNION des deux requêtes)
-        $sql = "(SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, available_seats, date
+        $sql = "(SELECT journeys.id, place_departure, place_arrival, departure_time, arrival_time, total_seats, date
                  FROM journeys 
                  WHERE journeys.user_id = :user_id AND journeys.status = :status)
                 UNION
@@ -50,4 +50,13 @@ function getJourneysByStatus($pdo, $user_id, $status, $role = 'passager')
     $query->execute();
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getCreditById(PDO $pdo, int $user_id): int|false
+{
+$sql = "SELECT credit FROM credits WHERE user_id = :user_id";
+$query = $pdo->prepare($sql);
+$query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+$query->execute();
+return $query->fetchColumn();
 }

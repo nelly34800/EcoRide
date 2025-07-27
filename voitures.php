@@ -21,7 +21,8 @@ if (isset($_GET['success'])): ?>
 
 <div class="container">
     <h1>Mes voitures</h1>
-    <a class="btn btn-primary m-2" href="ajout_voiture.php">Ajouter une voiture</a>
+    <a class="btn btn-primary m-2" href="ajout_voiture.php">Ajouter une voiture</a><br>
+    <a class="btn btn-primary m-2" href="ajout_covoiturage.php">Ajouter un covoiturage</a>
 
     <?php if (count($cars) > 0): ?>
         <div class="row">

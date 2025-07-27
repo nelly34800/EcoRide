@@ -4,7 +4,6 @@ if (isset($journeys) && is_array($journeys) && count($journeys) > 0) {
     // Si la variable $journeys est définie et contient des données, appelle la fonction showJourneys
     showJourneys($journeys);
 }
-
 // Fonction pour afficher les covoiturages
 function showJourneys($journeys)
 {
@@ -15,7 +14,7 @@ function showJourneys($journeys)
             require "templates/journey_part.php"; // Affichage du covoiturage
         }
     } else {
-        echo "<h1>Aucun covoiturage trouvé</h1>";
+        echo "<h1>aucun covoiturage trouvé</h1>";
     }
 }
 

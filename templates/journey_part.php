@@ -11,7 +11,7 @@ require_once "lib/utils.php";
                 date: <?= htmlspecialchars(changeDateFormat($journey['date'])); ?> <br>
                 départ: <?= htmlspecialchars(changeHourFormat($journey['departure_time'])); ?> - arrivée: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?><br>
                 voyage éco: <?php convertEnergy($journey['energy']); ?> <br>
-                place dispo: <?= htmlspecialchars($journey['available_seats']); ?> place(s)<br>
+                place dispo: <?= htmlspecialchars($journey['total_seats']); ?> place(s)<br>
                 tarif: <?= htmlspecialchars($journey['price']); ?> crédits<br>
             </p>
             <!--on passe la clé en paramètre pour qu'elle passe par l'id-->
