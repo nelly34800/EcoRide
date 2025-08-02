@@ -1,2 +1,4 @@
-/assets
 /DocEcoRide
+/.env
+/test.php
+/node_modules
