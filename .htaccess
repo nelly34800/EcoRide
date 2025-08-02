@@ -1,0 +1,9 @@
+# Redirection des erreurs 404 vers une page personnalisée
+ErrorDocument 404 /404.php
+
+# Redirection d'une ancienne page vers une nouvelle page
+Redirect 301 /ancienne-page.html /nouvelle-page.html
+
+# Réécriture d'URL pour rendre les URL plus propres
+RewriteEngine On
+RewriteRule ^article/([0-9]+)$ article.php?id=$1 [L]
