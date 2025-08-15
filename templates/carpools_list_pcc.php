@@ -1,5 +1,5 @@
 <?php
-function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = true)
+function showJourneys($title, $journeys, $showPlaces = true,  $textBouton1 = "", $action1 = "", $textBouton2 = "", $action2 = "", $textBouton3 = "", $action3 = "", $textBouton4 = "", $action4 = "")
 {
     echo "<div class='table-responsive p-4'>";
     echo "<h4>$title</h4>";
@@ -7,6 +7,10 @@ function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = tru
     if (empty($journeys)) {
         echo "<p>Aucun trajet trouvé.</p>";
     } else {
+
+           // Vérifie si la colonne Action est nécessaire
+        $hasActions = !empty($textBouton1) || !empty($textBouton2) || !empty($textBouton3)|| !empty($textBouton4);
+
         echo "<table class='table table-bordered table-striped'>";
         // En-tête du tableau
         echo "<tr>
@@ -17,12 +21,15 @@ function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = tru
         if ($showPlaces) {
             echo "<th class='d-none d-md-table-cell'>Places dispo</th>";
         }
-        echo "<th class='d-none d-md-table-cell'>Action</th>
-    </tr>";
+
+        if ($hasActions) {
+            echo "<th class='d-none d-md-table-cell'>Action</th>";
+        }
+        echo "</tr>";
 
         foreach ($journeys as $journey) {
             // Ligne pour les écrans moyens et grands
-            echo "<tr>
+            echo "<tr class='d-none d-md-table-row'>
                     <td>" . htmlspecialchars(changeDateFormat($journey['date'])) . "</td>
                     <td class='d-none d-md-table-cell'>" . htmlspecialchars($journey['place_departure']) . "</td>
                     <td class='d-none d-md-table-cell'>" . htmlspecialchars(changeHourFormat($journey['departure_time'])) . "</td>
@@ -33,14 +40,36 @@ function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = tru
                 echo "<td class='d-none d-md-table-cell'>" . htmlspecialchars($journey['total_seats']) . "</td>";
             }
 
-            echo "<td class='d-none d-md-table-cell'>
-                        <form method='POST' action='$action'>
+            if ($hasActions) {
+                echo "<td>";
+                if (!empty($textBouton1)) {
+                    echo "<form method='POST' action='$action1'>
+                        <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
+                        <button class='btn btn-primary btn-sm' type='submit'>$textBouton1</button>
+                    </form>";
+                }
+                if (!empty($textBouton2)) {
+                     echo "<form method='POST' action='$action2'>
                             <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
-                            <button class='btn btn-primary' type='submit'>$textBouton</button>
-                            <a href='sup_covoiturage.php?id=" . $journey['id'] . "' class='btn btn-dark m-2' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce covoiturage ?\");'>Supprimer covoiturage</a>
-                        </form>
-                    </td>
-            </tr>";
+                            <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce covoiturage ?\");'>$textBouton2</button>
+                    </form>";
+                }
+                if (!empty($textBouton3)) {
+                    echo "<form method='POST' action='$action3'>
+                        <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
+                        <button class='btn btn-primary btn-sm' type='submit'>$textBouton3</button>
+                    </form>";
+                }
+                if (!empty($textBouton4)) {
+                    echo "<form method='POST' action='$action4'>
+                            <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
+                            <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir signaler un problème ?\");'>$textBouton4</button>
+                    </form>";
+                }
+                echo "</td>";
+            }
+            echo "</tr>";
+
             // Ligne pour les petits écrans
             echo "<tr class='d-md-none'>
                     <td colspan='4'>
@@ -52,20 +81,41 @@ function showJourneys($title, $journeys, $textBouton, $action, $showPlaces = tru
                 echo "<strong>Places disponibles :</strong> " . htmlspecialchars($journey['total_seats']) . "<br>";
             }
 
-            echo "  <form method='POST' action='$action'>
+            if ($hasActions) {
+                if (!empty($textBouton1)) {
+                    echo "<form method='POST' action='$action1'>
                         <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
-                        <button class='btn btn-primary btn-sm' type='submit'>$textBouton</button>
-                        <a href='sup_covoiturage.php?id=" . $journey['id'] . "' class='btn btn-dark btn-sm m-2' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce covoiturage ?\");'>Supprimer covoiturage</a>
-                    </form>
-                    </td>
-                  </tr>";
-        }
+                        <button class='btn btn-primary btn-sm' type='submit'>$textBouton1</button>
+                    </form>";
+                }
+                if (!empty($textBouton2)) {
+                     echo "<form method='POST' action='$action2'>
+                            <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
+                            <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce covoiturage ?\");'>$textBouton2</button>
+                    </form>";
+                }
+                if (!empty($textBouton3)) {
+                    echo "<form method='POST' action='$action3'>
+                        <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
+                        <button class='btn btn-primary btn-sm' type='submit'>$textBouton3</button>
+                    </form>";
+                }
+                if (!empty($textBouton4)) {
+                    echo "<form method='POST' action='$action4'>
+                            <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
+                            <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir signaler un problème ?\");'>$textBouton4</button>
+                    </form>";
+                }
+                echo "</td>";
+            }
+            echo "</tr>";
+                  }
         echo "</table>";
     }
     echo "</div>";
 }
 // Affichage des différentes catégories de trajets
-showJourneys("Covoiturages à venir", $pending, "Démarrer covoiturage", "lib/start_carpool_pc.php", true);
-showJourneys("Covoiturages complets", $complet, "Démarrer covoiturage", "lib/start_carpool_pc.php", false);
-showJourneys("Covoiturages en cours", $ongoing, "Arrivée à destination", "lib/arrival_carpool_pc.php", false);
-showJourneys("Historique des covoiturages", $completed, "", "", false);
+showJourneys("Covoiturages à venir", $pending, true, "Démarrer covoiturage", "lib/start_carpool_pc.php", "suprimer covoiturage", "sup_covoiturage.php");
+showJourneys("Covoiturages complets", $complet, false, "Démarrer covoiturage", "lib/start_carpool_pc.php", "suprimer covoiturage", "sup_covoiturage.php");
+showJourneys("Covoiturages en cours", $ongoing, false,   "", "", "", "", "Arrivée à destination", "lib/arrival_carpool_pc.php", "Signaler problème", "lib/report_issue.php");
+showJourneys("Historique des covoiturages", $completed, false);

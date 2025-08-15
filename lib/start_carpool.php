@@ -26,7 +26,6 @@ try {
         header("Location: ../chauffeur.php?success=1");  // Redirection avec succès
         exit();
     } else {
-
         // Annuler la transaction si l'ID du trajet n'est pas trouvé
         throw new Exception("ID du trajet manquant");
     }

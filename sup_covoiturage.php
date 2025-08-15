@@ -8,7 +8,7 @@ require_once "templates/header.php";
 
 
 $user_id = $_SESSION['user']['id'];
-$journey_id = $_GET['id'] ?? null; // Récupérer l'ID du covoiturage à supprimer
+$journey_id = $_POST['journey_id'] ?? null; // Récupérer l'ID du covoiturage à supprimer
 
 if ($journey_id) {
        // Récupère les infos du trajet
