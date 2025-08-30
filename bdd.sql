@@ -99,6 +99,15 @@ CREATE TABLE `reservations` (
    FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
 );
 
-
+CREATE TABLE `problems` (
+    `id` INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `descriptive` TEXT NOT NULL,
+    `created_at` datetime DEFAULT current_timestamp(),
+    `status` enum('to do', 'in progress', 'completed') NOT NULL DEFAULT 'to do',
+    `id_journey` INT NOT NULL,
+    `id_user_reporter` INT NOT NULL,
+    FOREIGN KEY (id_journey) REFERENCES journeys(id),
+    FOREIGN KEY (id_user_reporter) REFERENCES users(id)
+);
 
 

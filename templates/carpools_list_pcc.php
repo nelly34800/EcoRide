@@ -61,7 +61,7 @@ function showJourneys($title, $journeys, $showPlaces = true,  $textBouton1 = "",
                     </form>";
                 }
                 if (!empty($textBouton4)) {
-                    echo "<form method='POST' action='$action4'>
+                    echo "<form method='GET' action='$action4'>
                             <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
                             <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir signaler un problème ?\");'>$textBouton4</button>
                     </form>";
@@ -101,7 +101,7 @@ function showJourneys($title, $journeys, $showPlaces = true,  $textBouton1 = "",
                     </form>";
                 }
                 if (!empty($textBouton4)) {
-                    echo "<form method='POST' action='$action4'>
+                    echo "<form method='GET' action='$action4'>
                             <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
                             <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir signaler un problème ?\");'>$textBouton4</button>
                     </form>";
@@ -117,5 +117,5 @@ function showJourneys($title, $journeys, $showPlaces = true,  $textBouton1 = "",
 // Affichage des différentes catégories de trajets
 showJourneys("Covoiturages à venir", $pending, true, "Démarrer covoiturage", "lib/start_carpool_pc.php", "suprimer covoiturage", "sup_covoiturage.php");
 showJourneys("Covoiturages complets", $complet, false, "Démarrer covoiturage", "lib/start_carpool_pc.php", "suprimer covoiturage", "sup_covoiturage.php");
-showJourneys("Covoiturages en cours", $ongoing, false,   "", "", "", "", "Arrivée à destination", "lib/arrival_carpool_pc.php", "Signaler problème", "lib/report_issue.php");
+showJourneys("Covoiturages en cours", $ongoing, false,   "", "", "", "", "Arrivée à destination", "lib/arrival_carpool_pc.php", "Signaler problème", "signaler_probleme.php");
 showJourneys("Historique des covoiturages", $completed, false);

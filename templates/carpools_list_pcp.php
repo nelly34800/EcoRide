@@ -40,7 +40,7 @@ function showReservations($title, $journeys, $textBouton1 = "", $action1 = "", $
                     </form>";
                 }
                 if (!empty($textBouton2)) {
-                    echo "<form method='POST' action='$action2'>
+                    echo "<form method='GET' action='$action2'>
                             <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
                             <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir signaler un problème ?\");'>$textBouton2</button>
                     </form>";
@@ -71,7 +71,7 @@ function showReservations($title, $journeys, $textBouton1 = "", $action1 = "", $
                     </form>";
                 }
                 if (!empty($textBouton2)) {
-                    echo "<form method='POST' action='$action2'>
+                    echo "<form method='GET' action='$action2'>
                             <input type='hidden' name='journey_id' value='" . htmlspecialchars($journey['id']) . "'>
                             <button class='btn btn-dark btn-sm' type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir signaler un problème ?\");'>$textBouton2</button>
                     </form>";
@@ -92,5 +92,5 @@ function showReservations($title, $journeys, $textBouton1 = "", $action1 = "", $
 }
 // Affichage des différentes catégories de trajets
 showReservations("Covoiturages à venir", $passenger_upcoming, "", "", "", "", "annuler trajet", "sup_reservation.php",);
-showReservations("Covoiturages en cours", $passenger_ongoing, "Valider trajet", "lib/validate_journey.php", "Signaler problème", "lib/report_issue.php");
+showReservations("Covoiturages en cours", $passenger_ongoing, "Valider trajet", "lib/validate_journey.php", "Signaler problème", "signaler_probleme.php");
 showReservations("Historique des covoiturages", $passenger_completed);

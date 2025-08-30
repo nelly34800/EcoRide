@@ -98,10 +98,10 @@ function getJourneysById(PDO $pdo, int $id): array|bool
     $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, journeys.user_id, journeys.total_seats, journeys.price, journeys.date,
     cars.brand, cars.model, cars.color, cars.energy, users.pseudo, users.image, driver_preferences.pets, driver_preferences.smoking, driver_preferences.others
      FROM journeys
-            JOIN users ON user_id = users.id
-            JOIN cars ON car_id = cars.id
-            LEFT JOIN driver_preferences ON users.id = driver_preferences.user_id
-            WHERE journeys.id = :id";
+     JOIN users ON user_id = users.id
+     JOIN cars ON car_id = cars.id
+     LEFT JOIN driver_preferences ON users.id = driver_preferences.user_id
+     WHERE journeys.id = :id";
 
     $query = $pdo->prepare($sql);
     $query->bindValue(":id", $id, PDO::PARAM_INT);
