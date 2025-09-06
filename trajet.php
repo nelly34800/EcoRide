@@ -16,6 +16,9 @@ if (isset($_GET["id"])) {
     $error404 = true;
 }
 ?>
+<div class="hero-scene">
+    <img src="assets/img/banTrajet.jpg" alt="" width="100%">
+</div>
 
 <div class="col md-4 my-4 d-flex">
     <?php if (isset($journey) && $journey): ?>

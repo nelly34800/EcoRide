@@ -16,6 +16,7 @@ CREATE TABLE `users` (
   `address` text NOT NULL,
   `role_id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
+  `status` enum('active', 'suspended') DEFAULT 'active';
   FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
 );
 

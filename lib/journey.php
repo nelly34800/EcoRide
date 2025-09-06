@@ -199,7 +199,8 @@ function deleteJourney(PDO $pdo, int $journey_id, int $user_id): bool
     return $query->execute();
 }
 
-function getDriverByJourney($pdo, $journey_id) {
+function getDriverByJourney($pdo, $journey_id) 
+{
     $sql = "SELECT u.email, u.pseudo
             FROM journeys j
             JOIN users u ON j.user_id = u.id

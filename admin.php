@@ -8,20 +8,14 @@ require_once "templates/header.php";
 verifRole(5);
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
+<h1>Bienvenue administrateur</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace administrateur</title>
-</head>
+<div class="form-signin w-100 m-auto">
+  <a href="liste_employes.php" class="btn btn-primary">Liste des employé</a>
+  <a href="liste_utilisateurs.php" class="btn btn-dark">Liste des utilisateurs</a>
+</div>
 
-<body>
-    <h1>Bienvenue administrateur</h1>
-</body>
 
-</html>
 <?php
 require_once "templates/footer.php";
 ?>

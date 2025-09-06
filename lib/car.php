@@ -1,4 +1,4 @@
-<?php
+ <?php
 function registerCar(PDO $pdo, string $brand, string $model, string $color, string $energy, string $registration, string $date_first_registration, int $user_id): bool
 {
     $sql = "INSERT INTO cars (id, brand, model, color, energy, registration, date_first_registration, id_user) VALUES (NULL, :brand, :model, :color, :energy, :registration, :date_first_registration, :id_user)";
