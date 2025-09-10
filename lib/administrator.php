@@ -36,3 +36,23 @@ function deleteUser(PDO $pdo, int $id): bool
      $query->bindParam(':id', $id, PDO::PARAM_INT);
      return $query->execute();
 }
+
+function getJourneyByDay(PDO $pdo): array {
+    $sql = "SELECT DATE(date) as jour, COUNT(*) as nb_covoiturages
+            FROM journeys
+            GROUP BY DATE(date)
+            ORDER BY DATE(date)";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getCreditByDay(PDO $pdo): array {
+    $sql = "SELECT DATE(created_at) as jour, SUM(amount) as credits_gagnes
+            FROM commissions
+            GROUP BY DATE(created_at)
+            ORDER BY DATE(created_at)";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getTotalCredits(PDO $pdo): int {
+    return (int)$pdo->query("SELECT SUM(amount) FROM commissions")->fetchColumn();
+}
