@@ -71,7 +71,7 @@ function searchJourneys(PDO $pdo, string $place_departure, string $place_arrival
 
     $sql = "SELECT journeys.id, journeys.place_departure, journeys.place_arrival, journeys.departure_time, journeys.arrival_time, 
                    journeys.total_seats, journeys.price, journeys.date, 
-                   cars.energy, users.pseudo, users.image,
+                   cars.energy, users.id AS user_id, users.pseudo, users.image,
                    (journeys.total_seats - IFNULL(reservation_counts.reserved_count, 0)) AS places_restantes
             FROM journeys
             JOIN users ON user_id = users.id

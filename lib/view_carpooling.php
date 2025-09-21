@@ -11,6 +11,7 @@ function showJourneys($journeys)
         echo "<h1>Covoiturages trouvés</h1>";
 
         foreach ($journeys as $journey) {
+            $journey['averageRating'] = getAverageRating($journey['user_id']);
             require "templates/journey_part.php"; // Affichage du covoiturage
         }
     } else {
@@ -25,6 +26,7 @@ function showJourneysOtherDates($journeys)
         echo "<h1>pour cette date, mais voici d'autres trajets :</h1>";
 
         foreach ($journeys as $journey) {
+            $journey['averageRating'] = getAverageRating($journey['user_id']);
             require "templates/journey_part.php"; // Affichage du covoiturage
         }
     }

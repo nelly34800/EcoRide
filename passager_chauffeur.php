@@ -45,8 +45,6 @@ if (isset($_GET['success'])): ?>
         <div class="alert alert-warning">Problème signalé. Un administrateur va vérifier.</div>
     <?php elseif ($_GET['success'] == 5): ?>
         <div class="alert alert-success">Covoiturage démarré avec succès !</div>
-    <?php elseif ($_GET['success'] == 6): ?>
-        <div class="alert alert-success">Votre trajet a été validé!</div>
     <?php endif; ?>
 <?php elseif (isset($_GET['error'])): ?>
     <div class="alert alert-danger">Erreur lors de l'opération.</div>

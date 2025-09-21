@@ -36,8 +36,6 @@ $reported = getJourneysByStatus($pdo, $user_id, 'problem_reported', 'passager');
 if (isset($_GET['success'])): ?>
     <?php if ($_GET['success'] == 1): ?>
         <div class="alert alert-success">Trajet terminé avec succès !</div>
-    <?php elseif ($_GET['success'] == 2): ?>
-        <div class="alert alert-success">Votre trajet a été validé !</div>
     <?php elseif ($_GET['success'] == 4): ?>
         <div class="alert alert-warning">Problème signalé. Un administrateur va vérifier.</div>
     <?php endif; ?>

@@ -44,9 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             );
             if ($resAdd) {
                 $messages[] = "Compte employé créé avec succès !";
-                // Redirection possible :
-                // header("Location: liste_employes.php");
-                // exit;
+                header("Location: liste_employes.php");
+                exit;
             } else {
                 $errors[] = "Erreur lors de la création de l'utilisateur.";
             }

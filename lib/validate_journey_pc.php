@@ -40,7 +40,10 @@ if ($journey_id) {
      // Appliquer la commission si tous les passagers ont validé
     registerCommission($pdo, $journey_id);
 
-    header("Location: ../passager_chauffeur.php?success=6");
+    // Stocker l'ID du trajet dans la session pour avis
+    $_SESSION['last_journey_id'] = $journey_id;
+    
+    header("Location: ../avis_chauffeur.php?success&journey_id=" . $journey_id);
     exit();
 }
 

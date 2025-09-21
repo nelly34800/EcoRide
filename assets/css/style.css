@@ -68,12 +68,6 @@ body {
 .navbar-toggler {
   color: var(--primary);
 }
-.bg-primary {
-  color: var(--primary);
-}
-.color {
-  color: var(--primary);
-}
 .card-title {
   color: var(--dark);
 }
@@ -112,7 +106,6 @@ body {
   border-radius: 2rem;
   border: 0;
 }
-
 .table {
   --bs-table-color-state: var(--dark);
   --bs-table-border-color: var(--dark);
@@ -121,4 +114,32 @@ body {
   .colspan-all {
     display: table-cell;
   }
+}
+.stars {
+  color: gold;
+  font-size: 1.2rem;
+  margin-right: 2px;
+}
+.stars_dark {
+  color: #000000;
+}
+
+.carousel-control {
+  color: var(--primary);
+}
+.bs-card-border {
+  border: 2px solid var(--secondary); /* fallback si --secondary absent */
+  border-radius: 3px;
+  background-color: transparent;
+  padding: 0.8rem 1rem;
+  display: inline-block;
+  width: 100%; /* prend toute la largeur disponible */
+  max-width: 450px; /* limite la largeur pour ne pas toucher les flèches */
+  box-sizing: border-box; /* inclut padding dans la largeur */
+  text-align: center;
+}
+
+cite {
+  display: block; /* nécessaire pour que text-align fonctionne */
+  text-align: right; /* aligne le texte à droite */
 }

@@ -20,7 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
         $errors = $verif;
     }
 }
-?>
+
+if (isset($_GET['success'])): ?>
+    <div class="alert alert-success">Votre avis a bien été envoyé !</div>
+<?php endif; ?>
 
 <div class="hero-scene">
     <img src="assets/img/BanAccueil.png" alt="" width="100%">
