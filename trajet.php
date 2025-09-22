@@ -35,7 +35,11 @@ if (isset($_GET["id"])) {
             <img src="<?= htmlspecialchars(getAvatar($journey['image'])); ?>" class="bd-placeholder-img rounded-circle" width="100" height="100" alt="photo du chauffeur">
             <div class="card-body-dark p-4">
                 <h3><?= htmlspecialchars($journey['pseudo']); ?></h3>
-                <div id="stars"><?= renderStars($averageRating); ?></div>
+                <div id="stars">
+                    <?php if (!empty($reviews) && !empty($journey['averageRating'])): ?>
+                        <?= renderStars($averageRating); ?>
+                    <?php endif; ?>
+                </div>
                 <?php if (!empty($reviews)): ?>
                 <div id="reviewsCarousel-bord" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner px-5">
@@ -67,8 +71,8 @@ if (isset($_GET["id"])) {
                 <?php endif; ?>
                 <p class="card-text-light">
                     <?= htmlspecialchars(changeDateFormatJour($journey['date'])); ?> <br>
-                    heure départ: <?= htmlspecialchars(changeHourFormat($journey['departure_time'])); ?> <br>
-                    heure arrivée prévue: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?> <br>
+                    heure de départ: <?= htmlspecialchars(changeHourFormat($journey['departure_time'])); ?> <br>
+                    heure d'arrivée prévue: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?> <br>
                     durée prévue du trajet: <?= htmlspecialchars(journeyTime($journey['departure_time'], $journey['arrival_time'])); ?> <br></p>
                 <p class="card-text-light">
                     place dispo: <?= htmlspecialchars($journey['total_seats']); ?> <br></p>

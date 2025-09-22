@@ -73,7 +73,7 @@ function renderProblemsTable(array $problems, string $title, bool $showActions =
                                 <form action="lib/update_problem_status.php" method="post">
                                     <input type="hidden" name="problem_id" value="<?= $problem['problem_id'] ?>">
                                     <input type="hidden" name="new_status" value="completed">
-                                    <button class="btn btn-success">Marquer comme terminé</button>
+                                    <button class="btn btn-primary">Marquer comme terminé</button>
                                 </form>
                             <?php endif; ?>
                         </td>
