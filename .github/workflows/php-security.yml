@@ -9,19 +9,30 @@ on:
 jobs:
   psalm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
+      # 1️⃣ Récupérer le code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Installer PHP + Composer
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2" # adapte à ta version PHP
-          tools: composer, psalm
+          php-version: "8.2" # adapte selon ta version
+          tools: composer
 
+      # 3️⃣ Installer les dépendances Composer (inclut Psalm)
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist
 
+      # 4️⃣ Installer Psalm si ce n'est pas déjà installé
+      - name: Install Psalm
+        run: composer require --dev vimeo/psalm || true
+
+      # 5️⃣ Exécuter Psalm avec ta configuration
       - name: Run Psalm security scan
         run: vendor/bin/psalm --taint-analysis --output-format=github

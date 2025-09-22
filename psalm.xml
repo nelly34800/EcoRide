@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="5"
+    resolveFromConfigFile="true"
+    taintAnalysis="true"
+>
+    <projectFiles>
+        <directory name="lib"/>
+        <directory name="templates"/>
+        <directory name="."/> <!-- inclut les fichiers PHP à la racine -->
+    </projectFiles>
+
+    <issueHandlers>
+        <!-- Exemples d’alertes que tu peux ajuster -->
+        <MissingReturnType errorLevel="info"/>
+        <MixedAssignment errorLevel="info"/>
+    </issueHandlers>
+</psalm>
