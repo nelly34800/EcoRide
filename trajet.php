@@ -3,19 +3,31 @@ require_once "templates/header.php";
 require_once "lib/pdo.php";
 require_once "lib/journey.php";
 require_once "lib/utils.php";
+require_once "lib/review.php";
 
 $error404 = false;
 
 if (isset($_GET["id"])) {
     $id = (int)$_GET["id"];
     $journey = getJourneysById($pdo, $id,);
-    if (!$journey) {
+
+    if ($journey) {
+        // récupérer l'id du chauffeur depuis MySQL
+        $id_driver = (string) $journey['user_id'];
+        // récupère note et commentaire depuis mongoDB
+        $averageRating = getAverageRating($id_driver);
+        $reviews = getDriverReviews($id_driver, $pdo);
+
+        } else {
+            $error404 = true;
+        }
+    } else {
         $error404 = true;
     }
-} else {
-    $error404 = true;
-}
 ?>
+<div class="hero-scene">
+    <img src="assets/img/banTrajet.jpg" alt="" width="100%">
+</div>
 
 <div class="col md-4 my-4 d-flex">
     <?php if (isset($journey) && $journey): ?>
@@ -23,10 +35,44 @@ if (isset($_GET["id"])) {
             <img src="<?= htmlspecialchars(getAvatar($journey['image'])); ?>" class="bd-placeholder-img rounded-circle" width="100" height="100" alt="photo du chauffeur">
             <div class="card-body-dark p-4">
                 <h3><?= htmlspecialchars($journey['pseudo']); ?></h3>
+                <div id="stars">
+                    <?php if (!empty($reviews) && !empty($journey['averageRating'])): ?>
+                        <?= renderStars($averageRating); ?>
+                    <?php endif; ?>
+                </div>
+                <?php if (!empty($reviews)): ?>
+                <div id="reviewsCarousel-bord" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner px-5">
+                    <?php foreach ($reviews as $index => $review): ?>
+                    <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                        <div class="p-3">
+                             <div class="bs-card-border">
+                                <p class="card-text-light mb-2">Avis : <br> "
+                                <?= htmlspecialchars($review['comment']) ?> "</p>
+                                 <cite class="card-text-light mb-2"><?= htmlspecialchars($review['passenger_pseudo'])?></cite>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Flèches de navigation -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
+                    <i class="bi bi-caret-left-fill fs-1 card-text-light "></i>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="next">
+                    <i class="bi bi-caret-right-fill fs-1 card-text-light"></i> 
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+                </div>
+                <?php else: ?>
+                <p class="card-text-light">Aucune note et avis pour l’instant.</p>
+                <?php endif; ?>
                 <p class="card-text-light">
                     <?= htmlspecialchars(changeDateFormatJour($journey['date'])); ?> <br>
-                    heure départ: <?= htmlspecialchars(changeHourFormat($journey['departure_time'])); ?> <br>
-                    heure arrivée prévue: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?> <br>
+                    heure de départ: <?= htmlspecialchars(changeHourFormat($journey['departure_time'])); ?> <br>
+                    heure d'arrivée prévue: <?= htmlspecialchars(changeHourFormat($journey['arrival_time'])); ?> <br>
                     durée prévue du trajet: <?= htmlspecialchars(journeyTime($journey['departure_time'], $journey['arrival_time'])); ?> <br></p>
                 <p class="card-text-light">
                     place dispo: <?= htmlspecialchars($journey['total_seats']); ?> <br></p>

@@ -16,8 +16,6 @@ require_once "templates/header.php";
             <input type="text" name="title" class="form-control" id="title">
         </div>
 
-
-
         <div class="mb-3">
             <label class="form-label" for="description">Description : </label>
             <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>

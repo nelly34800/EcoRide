@@ -20,7 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
         $errors = $verif;
     }
 }
-?>
+
+if (isset($_GET['success'])): ?>
+    <div class="alert alert-success">Votre avis a bien été envoyé !</div>
+<?php endif; ?>
 
 <div class="hero-scene">
     <img src="assets/img/BanAccueil.png" alt="" width="100%">
@@ -69,11 +72,11 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
 <section>
     <article>
         <div class="container p-4">
-            <h2 class="text-center">Qui somme nous?</h2>
+            <h2 class="text-center">Qui sommes-nous?</h2>
             <div class="row row-cols-1 row-cols-md-2 align-items-center">
                 <div class="col-12 col-md-6">
                     <p class="text-center">
-                        Nouvelle plateforme de covoiturage: notre objectif premier est de réduire l’impacte environnemental des déplacements en encourageant le covoiturage écologique.
+                        Nouvelle plateforme de covoiturage: notre objectif premier est de réduire l’impact environnemental des déplacements en encourageant le covoiturage écologique.
                     </p>
                 </div>
                 <div class="col-12 col-md-6">
@@ -92,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
                     </div>
                     <div class="col-12 col-md-6">
                         <p class="text-center-inv">
-                            Covoiturez en plus d’être plus respectueux de l’environnement, vous fait aussi économiser sur vos trajets. Cela pourrait également vous permettre de vous faire de nouveaux amis.
+                            Covoiturer, en plus d’être plus respectueux de l’environnement, vous fait aussi économiser sur vos trajets. Cela pourrait également vous permettre de vous faire de nouveaux amis.
                         </p>
                     </div>
                 </div>
@@ -101,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['getJourneys'])) {
     </article>
 </section>
 
-<h4>Réservez en toute confiance:</h4>
+<h4>Réservez en toute confiance: </h4>
 <p>Nous vérifions les avis et les profils de nos chauffeurs pour que vous sachiez avec qui vous allez voyager.</p>
 
 <?php

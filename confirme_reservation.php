@@ -9,10 +9,13 @@ require_once "templates/header.php";
 
 // Vérifie que l'utilisateur est connecté
 if (!isset($_SESSION['user'])) {
-    echo '<div class="alert alert-danger text-center">Utilisateur non connecté.</div>';
+    // Sauvegarde l'URL demandée
+    $_SESSION['redirect_to'] = $_SERVER['REQUEST_URI'];
+
+    // Redirige vers la page de connexion
+    header("Location: signin.php");
     exit();
 }
-
 $user_id = $_SESSION['user']['id'];
 $role_id = $_SESSION['user']['role_id'] ?? null;
 

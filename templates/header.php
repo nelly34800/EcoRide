@@ -16,7 +16,7 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/override-bootstrap.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.2">
     <link rel="shortcut icon" href="assets/img/logo_ecoride.png" type="image/png">
     <title>EcoRide</title>
 </head>
@@ -28,6 +28,7 @@ $currentPage = basename($_SERVER['SCRIPT_NAME']);
                 <a class="navbar-brand" href="index.php">
                     <img src="assets/img/logo_e.png" alt="Logo EcoRide  cercle avec à l'intérieur une voiture à coté d'un smartphone" width="52px">
                 </a>
+                <!--bouton pour les petits écrans-->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon" style="background-color: var(--primary);"></span>
                 </button>

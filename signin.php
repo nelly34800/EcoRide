@@ -8,36 +8,63 @@ $error = null;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user = verifyUserLoginPassword($pdo, $_POST["email"], $_POST["password"]);
-    if ($user) {
+
+    // 1. Email ou mot de passe incorrect
+    if (!$user) {
+        $error = "Email ou mot de passe incorrect";
+    } 
+    // 2. Compte suspendu
+    elseif ($user['status'] !== 'active') {
+        $error = "Votre compte est suspendu. Contactez l'administrateur.";
+    } 
+    // 3. Tout est OK
+    else {
         session_regenerate_id(true);
         $_SESSION["user"] = [
             "id" => $user["id"],
             "pseudo" => $user["pseudo"],
             "role_id" => $user["role_id"]
         ];
-        // redirige l'admins sur son espace
-        if ($_SESSION["user"]["role_id"] == 5) {
-            header("Location: admin.php");
-            // redirige l'employé sur son espace
-        } elseif ($_SESSION["user"]["role_id"] == 4) {
-            header("Location: employe.php");
-            // redirige le chauffeur sur son espace
-        } elseif ($_SESSION["user"]["role_id"] == 2) {
-            header("Location: chauffeur.php");
-        } elseif ($_SESSION["user"]["role_id"] == 3 || $_SESSION["user"]["role_id"] == 6) {
-            if (isset($_SESSION['redirect_to'])) {
-                $redirect_to = $_SESSION['redirect_to'];
-                unset($_SESSION['redirect_to']);
-                header("Location: $redirect_to");
-            } else {
+
+        // Redirection selon rôle
+        switch ($_SESSION["user"]["role_id"]) {
+            case 5:
+                header("Location: admin.php");
+                break;
+            case 4:
+                header("Location: employe.php");
+                break;
+            case 2:
+                header("Location: chauffeur.php");
+                break;
+            case 3:
+                if (isset($_SESSION['redirect_to'])) {
+                    // redirige vers la page précédente ex: page de reservation pour pas refaire la recherche du covoiturage
+                    $redirect_to = $_SESSION['redirect_to'];
+                    unset($_SESSION['redirect_to']);
+                    header("Location: $redirect_to");
+                } else {
+                    header("Location: passager.php");
+                }
+                break;
+            case 6:
+                if (isset($_SESSION['redirect_to'])) {
+                    // idem passager
+                    $redirect_to = $_SESSION['redirect_to'];
+                    unset($_SESSION['redirect_to']);
+                    header("Location: $redirect_to");
+                } else {
+                    header("Location: passager_chauffeur.php");
+                }
+                break;
+            default:
                 header("Location: index.php");
-            }
+                break;
         }
         exit;
-    } else {
-        $error = "Email ou mot de passe incorrect";
     }
 }
+
 ?>
 <div class="hero-scene">
     <img src="assets/img/BanTrajet.jpg" alt="" width="100%">

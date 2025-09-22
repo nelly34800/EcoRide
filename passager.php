@@ -36,8 +36,6 @@ $reported = getJourneysByStatus($pdo, $user_id, 'problem_reported', 'passager');
 if (isset($_GET['success'])): ?>
     <?php if ($_GET['success'] == 1): ?>
         <div class="alert alert-success">Trajet terminé avec succès !</div>
-    <?php elseif ($_GET['success'] == 2): ?>
-        <div class="alert alert-success">Votre trajet a été validé !</div>
     <?php elseif ($_GET['success'] == 4): ?>
         <div class="alert alert-warning">Problème signalé. Un administrateur va vérifier.</div>
     <?php endif; ?>
@@ -45,16 +43,6 @@ if (isset($_GET['success'])): ?>
     <div class="alert alert-danger">Erreur lors de l'opération.</div>
 <?php endif; ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon compte, espace passager</title>
-</head>
-
-<body>
     <div class="container p-4">
         <div class="row row-cols-1 row-cols-md-2 align-items-center">
             <div class="col-md-3 p-2">
@@ -71,9 +59,7 @@ if (isset($_GET['success'])): ?>
         </div>
     </div>
     </div>
-</body>
 
-</html>
 <?php
 require_once "templates/footer.php";
 ?>

@@ -12,7 +12,7 @@ if (!isset($_SESSION['user']['id'])) {
 }
 
 $user_id = $_SESSION['user']['id'];
-$journey_id = isset($_GET['id']) ? (int) $_GET['id'] : null; // Vérification et conversion en entier; Récupérer l'ID de la réservation à supprimer
+$journey_id = isset($_POST['journey_id']) ? (int) $_POST['journey_id'] : null; // Vérification et conversion en entier; Récupérer l'ID de la réservation à supprimer
 
 if (!$journey_id || !($reservation_id = getReservationId($pdo, $journey_id, $user_id))) {
     header("Location: confirmation.php?type=annulation&status=error");
@@ -34,12 +34,12 @@ if ($journey_data && isset($journey_data['price'])) {
     if ($driver && isset($driver['email'], $driver['pseudo'])) {
        $typeMessage = "annulation  de réservation de trajet";
        $messageHtml = "<p>Bonjour " . htmlspecialchars($driver['pseudo']) . ",</p>";
-       $messageHtml .= "Désolé, un passager a annulé sa réservation de trajet." 
-                . htmlspecialchars($journey['place_departure']) 
+       $messageHtml .= "Désolé, un passager a annulé sa réservation de trajet de " 
+                . htmlspecialchars($journey_data['place_departure']) 
                 . "</strong> à <strong>" 
-                . htmlspecialchars($journey['place_arrival']) 
+                . htmlspecialchars($journey_data['place_arrival']) 
                 . "</strong> le <strong>" 
-                . htmlspecialchars(changeDateFormatJour($journey['date'])) 
+                . htmlspecialchars(changeDateFormatJour($journey_data['date'])) 
                 . "</strong> 🚗💬</p>";
             $messageHtml .= "<p>Merci pour votre engagement dans la communauté EcoRide ! 🚗💬</p>";
        

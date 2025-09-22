@@ -113,3 +113,15 @@ function slugify($text, string $divider = '-')
 
     return $text;
 }
+
+function renderStars($rating, $maxStars = 5) {
+    $html = '';
+    for ($i = 1; $i <= $maxStars; $i++) {
+        if ($i <= floor($rating)) {
+            $html .= '<i class="bi bi-star-fill stars"></i>'; // étoile pleine
+        } else {
+            $html .= '<i class="bi bi-star-fill stars_dark"></i>'; // étoile vide
+        }
+    }
+    return '<div class="stars">' . $html . '</div>';
+}

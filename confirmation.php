@@ -21,6 +21,9 @@ $messages = [
         'success' => "Le covoiturage a été supprimé avec succès!",
         'error'   => "Erreur lors de la suppression du covoiturage!",
     ],
+    'problem' => [
+        'success' => "Le problème a été signalé avec succès!",
+    ],
 ];
 
 // Choix du message

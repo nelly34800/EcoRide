@@ -1,8 +1,9 @@
 <?php
-require_once "templates/header.php";
 require_once "Lib/pdo.php";
 require_once "lib/journey.php";
+require_once "lib/review.php";
 require_once "lib/view_carpooling.php";
+require_once "templates/header.php";
 
 // Récupérer les données envoyées depuis le formulaire de `index.php`
 $place_departure = isset($_GET['place_departure']) ? $_GET['place_departure'] : '';

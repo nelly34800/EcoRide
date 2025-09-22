@@ -99,7 +99,7 @@ function verifyUser($user): array|bool
 }
 function verifyUserLoginPassword(PDO $pdo, string $email, string $password): bool|array
 {
-    $query = $pdo->prepare("SELECT id, pseudo, email, password, role_id FROM users WHERE email = :email");
+    $query = $pdo->prepare("SELECT id, pseudo, email, password, role_id, status FROM users WHERE email = :email");
     $query->bindValue(":email", $email);
     $query->execute();
     $user = $query->fetch(PDO::FETCH_ASSOC);
