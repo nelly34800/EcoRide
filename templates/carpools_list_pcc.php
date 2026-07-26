@@ -14,7 +14,7 @@ function showJourneys($title, $journeys, $showPlaces = true,  $textBouton1 = "",
         echo "<table class='table table-bordered table-striped'>";
         // En-tête du tableau
         echo "<tr>
-                <th class='date-cell'>Date</th>
+                <th class='d-none d-md-table-cell'>Date</th>
                 <th class='d-none d-md-table-cell' colspan='2'>Départ</th>
                 <th class='d-none d-md-table-cell' colspan='2'>Arrivée</th>";
         // Affichage de la colonne "Places dispo" uniquement si $showPlaces est vrai

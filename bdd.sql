@@ -1,6 +1,6 @@
-CREATE DATABASE `ecoride2`;
+CREATE DATABASE `ecoride`;
 
-USE `ecoride2`;
+USE `ecoride`;
 
 CREATE TABLE `roles` (
   `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,

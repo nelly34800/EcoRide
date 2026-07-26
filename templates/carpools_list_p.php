@@ -13,7 +13,7 @@ function showReservations($title, $journeys, $textBouton1 = "", $action1 = "", $
 
         echo "<table class='table table-bordered table-striped'>";
         echo "<tr>
-            <th class='date-cell'>Date</th>
+            <th class='d-none d-md-table-cell'>Date</th>
             <th class='d-none d-md-table-cell' colspan='2'>Départ</th>
             <th class='d-none d-md-table-cell' colspan='2'>Arrivée</th>";
 
